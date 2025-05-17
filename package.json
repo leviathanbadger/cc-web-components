@@ -1,0 +1,21 @@
+{
+    "name": "cc-web-components",
+    "version": "0.1.0",
+    "description": "Experimenting with Codex to create WASM user controls/components mimicking some of the controls in Adobe CC products, written in Rust.",
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "lint": "eslint --ext .ts src",
+        "test": "vitest"
+    },
+    "devDependencies": {
+        "vite": "^5.0.0",
+        "vitest": "^1.0.0",
+        "typescript": "^5.2.0",
+        "eslint": "^8.0.0",
+        "prettier": "^3.0.0",
+        "@typescript-eslint/eslint-plugin": "^6.0.0",
+        "@typescript-eslint/parser": "^6.0.0"
+    }
+}

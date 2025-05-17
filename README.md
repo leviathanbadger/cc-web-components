@@ -38,3 +38,21 @@ WebAssembly, the shadow DOM, the pointer events API, pointer lock, and modern we
 I may also use the Houdini CSS APIs to create CSS properties and animations customized for these
 components. Finally, I'm intending to see how much of this can be automated using Codex, and how much
 babysitting is required to get it to work.
+
+## Getting Started
+
+This repository is set up as an NPM package using [Vite](https://vitejs.dev/) for development and bundling. Once dependencies are installed you can start the dev server with:
+
+```bash
+npm run dev
+```
+
+The example page under `examples/basic-demo` will be served so you can experiment with the components during development.
+
+Building the library outputs the bundled files to `dist/`:
+
+```bash
+npm run build
+```
+
+Tests and linting are stubbed out for now and will be expanded as the project grows.
