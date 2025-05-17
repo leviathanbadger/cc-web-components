@@ -39,6 +39,7 @@ each, along with how they relate to this component library:
 
 Custom Elements are a core part of the Web Components standard, allowing developers to define new
 HTML tags with custom behavior. A custom element is essentially a JavaScript class that extends HTMLElement (often via a base class). In our case we will use Lit's `LitElement`, and register the element with the browser's custom elements registry. Once defined, you can use a `<custom-tag>` in any page, and the browser will instantiate your class for that element, enabling fully custom logic and rendering.
+In this project, each UI
 control (e.g. a draggable number input) will be implemented as a custom element, so it can be
 embedded in any web page just like `<div>` or `<input>` tags. Web components have the benefit of
 interoperability – they work with any framework or no framework at all, because they are standard
