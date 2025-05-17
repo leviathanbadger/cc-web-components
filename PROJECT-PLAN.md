@@ -38,16 +38,12 @@ each, along with how they relate to this component library:
 ### Custom Elements (Web Components)
 
 Custom Elements are a core part of the Web Components standard, allowing developers to define new
-HTML tags with custom behavior. A custom element is essentially a JavaScript class that extends
-HTMLElement (or another specific element type) and is registered with the browser’s custom elements
-registry. Once defined, you can use a `<custom-tag>` in any page, and the browser will instantiate
-your class for that element, enabling fully custom logic and rendering. In this project, each UI
+HTML tags with custom behavior. A custom element is essentially a JavaScript class that extends HTMLElement (often via a base class). In our case we will use Lit's `LitElement`, and register the element with the browser's custom elements registry. Once defined, you can use a `<custom-tag>` in any page, and the browser will instantiate your class for that element, enabling fully custom logic and rendering.
 control (e.g. a draggable number input) will be implemented as a custom element, so it can be
 embedded in any web page just like `<div>` or `<input>` tags. Web components have the benefit of
 interoperability – they work with any framework or no framework at all, because they are standard
-browser features. This makes them ideal for a shared component library. We will likely define our
-custom elements using a base class (possibly provided by a library like Lit, discussed below, or
-manually extending HTMLElement) and specify a tag name, such as `<cc-draggable-number>` for the
+browser features. This makes them ideal for a shared component library. We will define our
+custom elements using Lit's `LitElement` base class and specify a tag name, such as `<cc-draggable-number>` for the
 continuous number input control. Key capabilities of custom elements that we’ll use include
 lifecycle callbacks (to initialize the component when it’s added to the DOM) and custom events
 (to notify the host application of changes, e.g. when the value changes due to dragging).
@@ -78,20 +74,13 @@ top of the standard Web Components APIs. In essence, Lit removes a lot of boiler
 vanilla custom elements require, and it makes it easy to define a component’s template in a
 concise way. Each Lit element is still a true custom element under the hood (so it works
 anywhere), but Lit’s ergonomics (like its template literal HTML syntax and reactive properties)
-will help us build complex components faster. For this project, using Lit could be very beneficial,
+will help us build complex components faster. For this project, using Lit will be very beneficial, and we have committed to it,
 since our components might need to render dynamic content and update the UI in response to user
 interactions (for example, updating the displayed number while dragging). With Lit, we can define
 the component’s HTML structure in the `render()` method and let Lit handle re-rendering when
 properties change, rather than manually manipulating the DOM. Lit also supports scoped CSS
 by letting us define styles that apply inside the shadow DOM of the component. Given that
-performance is a goal, it’s worth noting that Lit is designed to be fast and lightweight; it
-adds minimal overhead. That said, incorporating Lit means introducing a dependency (the Lit
-library itself) and adhering to its patterns. It’s a trade-off between convenience and adding
-an extra layer on top of raw Web Components. If the project aims to maximize learning of the
-low-level Web Component APIs, we might implement components “by hand.” But if productivity and
-maintainability are priorities, Lit is a strong candidate to include. In summary, Lit provides
-a modern, efficient way to create Web Components with reactive state and templating, which aligns
-with our needs for building a polished component library.
+performance is a goal, it's worth noting that Lit is designed to be fast and lightweight, adding minimal overhead. We have decided to use Lit for this project to prioritize productivity and maintainability. Lit provides a modern, efficient way to create Web Components with reactive state and templating, which aligns with our needs for building a polished component library.
 
 ### Rust and WebAssembly
 
@@ -362,7 +351,7 @@ cc-web-components/
 │   │   ├── draggable-number/
 │   │   │   ├── index.ts      # JS/TS code for the <cc-draggable-number> component
 │   │   │   ├── style.css     # Component-specific styles (if not in JS)
-│   │   │   └── template.ts   # Template definition (if using Lit or similar)
+│   │   │   └── template.ts   # Template definition (Lit)
 │   │   └── ... (other components) ...
 │   └── wasm-bindings/        # Helper TS files to load/initialize WASM
 │       └── cc_components_bg.wasm?    # (This will be generated or copied from Rust build)
@@ -433,7 +422,7 @@ and for integrating Rust compilation, as well as installing other tooling:
 
 2.  Install Vite and Dev Dependencies: Run
     `npm install --save-dev vite vitest typescript eslint prettier` (and any related tooling).
-    Vite will be our dev server and bundler. If we use Lit, install it with `npm install lit`.
+    Install Lit with `npm install lit` as our components will rely on it. Vite will be our dev server and bundler.
     For TypeScript, we add a tsconfig.json that Vite/Vitest will use. We’ll configure
     tsconfig.json to output ESNext and module resolution NodeNext (for ESM). We also ensure
     types for Node and possibly jsdom for tests are included.
@@ -468,9 +457,7 @@ and for integrating Rust compilation, as well as installing other tooling:
 
     This tells Vite we’re building a library from src/index.ts, and it should produce bundle
     files like cc-web-components.es.js and cc-web-components.umd.js in the dist folder. We mark
-    lit as external so that if we use Lit, it won’t be baked into our library (assuming consumers
-    will also include it, or we might reconsider and bundle Lit to make it zero-config for users –
-    that’s a choice to make). We may adjust formats (maybe CJS instead of UMD if needed). Vite will
+    lit as external so that it won't be baked into our library (assuming consumers will also include it, or we might reconsider and bundle Lit to make it zero-config for users – that's a choice to make). We may adjust formats (maybe CJS instead of UMD if needed). Vite will
     handle minification and such for production builds.
 
     Additionally, we need to integrate the Rust/WASM build. Since Vite doesn’t compile Rust, we have
@@ -549,7 +536,7 @@ and for integrating Rust compilation, as well as installing other tooling:
     We compile with wasm-pack build or similar as described. After a successful build, ensure the
     generated .wasm and JS are in place for the Vite side to use.
 
-5.  TypeScript and Source Code: Develop the component classes in src/components. If using Lit:
+5.  TypeScript and Source Code: Develop the component classes in src/components using Lit:
 
       - Create a class DraggableNumber that extends LitElement. Use the
         `@customElement('cc-draggable-number')` decorator (or call customElements.define) to
@@ -558,10 +545,6 @@ and for integrating Rust compilation, as well as installing other tooling:
         Attach event listeners for pointer down/move (Lit allows standard DOM listeners in
         templates or manual in connectedCallback).
 
-      - If not using Lit, we would create a class extending HTMLElement, attach a shadow root
-        in the constructor (`this.attachShadow({ mode: 'open' })`), then manually append child
-        elements or clone a template. We would also set up pointer event listeners in the element.
-
       - Either way, inside those event handlers, we might call our Rust functions. For instance,
         on pointermove, we calculate deltaX and call `process_drag(deltaX)` from WASM to get a
         new value, then update this.value. Or, we can keep the logic in JS for now (e.g. increment
@@ -569,9 +552,7 @@ and for integrating Rust compilation, as well as installing other tooling:
         initially, Rust just provides a function to clamp or format values, and later more
         complex things.
 
-      - Use CSS to style the component. If Lit, define static styles. If vanilla, either use a
-        `<style>` tag in shadow root or import a CSS module via Vite (e.g.
-        `import styleText from './style.css?inline'; shadowRoot.innerHTML = <style>${styleText}</style>...;`).
+        - Use CSS to style the component. Define static styles in Lit or import a CSS module via Vite.
 
       - Ensure to handle both input modalities: dragging (continuous) and direct text input.
         For text input, a simple `<input type="number">` could be in the shadow DOM; on change or
