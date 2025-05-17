@@ -49,6 +49,10 @@ npm run dev
 
 The example page under `examples/basic-demo` will be served so you can experiment with the components during development.
 
+For a framework example, a basic React app lives under `examples/react-app`. Run
+`npm install` then `npm run dev` inside that directory to see the components used
+within React.
+
 Building the library outputs the bundled files to `dist/`:
 
 ```bash
