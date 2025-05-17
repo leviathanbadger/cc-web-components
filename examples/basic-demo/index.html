@@ -8,13 +8,6 @@
     <h2>Demo: Draggable Number</h2>
     <cc-draggable-number id="demo-number" value="42"></cc-draggable-number>
     <p>Current value: <span id="display">42</span></p>
-    <script type="module" src="/src/index.ts"></script>
-    <script type="module">
-        const demoNum = document.getElementById('demo-number');
-        const display = document.getElementById('display');
-        demoNum.addEventListener('change', () => {
-            display.textContent = demoNum.getAttribute('value');
-        });
-    </script>
+    <script type="module" src="./main.ts"></script>
 </body>
 </html>

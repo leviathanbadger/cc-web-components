@@ -5,7 +5,8 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "vite build",
+        "build:wasm": "echo \"stub wasm build\"",
+        "build": "npm run build:wasm && vite build",
         "lint": "eslint --ext .ts src",
         "test": "vitest"
     },
