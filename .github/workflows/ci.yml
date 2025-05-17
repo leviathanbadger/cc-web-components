@@ -43,7 +43,7 @@ jobs:
       - name: Build Library (Vite)
         run: npm run build
       - name: Upload Coverage Report
-        if: success() && exists('coverage')
+        if: ${{ success() && hashFiles('coverage/**') != '' }}
         uses: actions/upload-artifact@v3
         with:
           name: coverage-report
