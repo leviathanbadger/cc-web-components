@@ -77,7 +77,6 @@ __pycache__/
 
 ## Node
 node_modules
-package-lock.json
 /src/doc/rustc-dev-guide/mermaid.min.js
 
 ## Rustdoc GUI tests
