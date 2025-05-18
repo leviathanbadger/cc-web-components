@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { defineDraggableNumber } from '../src/components/draggable-number';
-import { definePropertyInput } from '../src/components/property-input';
-import { defineRotationPropertyInput } from '../src/components/rotation-property-input';
+import { defineDraggableNumber } from '../draggable-number';
+import { definePropertyInput } from '../property-input';
+import { defineRotationPropertyInput } from './index';
 
 defineDraggableNumber();
 definePropertyInput();
@@ -11,9 +11,9 @@ const hasDom = typeof document !== 'undefined';
 (hasDom ? describe : describe.skip)('rotation-property-input', () => {
     it('formats value into rotations and degrees', () => {
         document.body.innerHTML = '<cc-rotation-property-input value="390"></cc-rotation-property-input>';
-        const comp = document.querySelector('cc-rotation-property-input') as any;
-        const rotations = comp.shadowRoot.querySelector('[part=rotations]') as any;
-        const degrees = comp.shadowRoot.querySelector('[part=degrees]') as any;
+        const comp = document.querySelector('cc-rotation-property-input') as HTMLElement & { value: number; shadowRoot: ShadowRoot };
+        const rotations = comp.shadowRoot.querySelector('[part=rotations]') as HTMLElement & { value: number; shadowRoot: ShadowRoot };
+        const degrees = comp.shadowRoot.querySelector('[part=degrees]') as HTMLElement & { value: number; shadowRoot: ShadowRoot };
         const rotInput = rotations.shadowRoot.querySelector('input') as HTMLInputElement;
         const degInput = degrees.shadowRoot.querySelector('input') as HTMLInputElement;
 
@@ -23,9 +23,9 @@ const hasDom = typeof document !== 'undefined';
 
     it('updates value when parts change', () => {
         document.body.innerHTML = '<cc-rotation-property-input value="390"></cc-rotation-property-input>';
-        const comp = document.querySelector('cc-rotation-property-input') as any;
-        const rotations = comp.shadowRoot.querySelector('[part=rotations]') as any;
-        const degrees = comp.shadowRoot.querySelector('[part=degrees]') as any;
+        const comp = document.querySelector('cc-rotation-property-input') as HTMLElement & { value: number; shadowRoot: ShadowRoot };
+        const rotations = comp.shadowRoot.querySelector('[part=rotations]') as HTMLElement & { value: number; shadowRoot: ShadowRoot };
+        const degrees = comp.shadowRoot.querySelector('[part=degrees]') as HTMLElement & { value: number; shadowRoot: ShadowRoot };
         const rotInput = rotations.shadowRoot.querySelector('input') as HTMLInputElement;
         const degInput = degrees.shadowRoot.querySelector('input') as HTMLInputElement;
 

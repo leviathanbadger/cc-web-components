@@ -364,8 +364,7 @@ cc-web-components/
 │   └── basic-demo/
 │       ├── index.html        # A simple HTML file demonstrating usage of our components
 │       └── main.ts           # Script to import the library and use it (if needed)
-├── tests/                     # Automated tests for components
-│   ├── components.test.ts    # Example test file for component behaviors
+├── tests/                     # Integration tests (if any)
 │   └── ...
 ├── readme-images/             # Images for the README documentation (screenshots, etc.)
 └── .github/
@@ -398,11 +397,9 @@ this during development (e.g., vite --open examples/basic-demo/index.html). This
 will also act as documentation by showing how to use the components (like including
 `<cc-draggable-number>` in HTML and perhaps using it with some script).
 
-The tests/ directory is for our automated tests. Depending on preference, we could intermix
-tests alongside source files (some like to put *.test.ts next to the component code).
-But having a separate tests/ folder is fine too. We will write tests for behaviors, e.g.,
-ensure that when you set a value on the component, it reflects correctly, or simulate a
-drag event and verify the outcome (if possible).
+Unit tests live next to the code they cover in `*.spec.ts` files. The `tests/` directory
+is reserved for future integration tests. Unit specs verify behaviors such as value
+synchronization or pointer dragging directly alongside the relevant component source.
 
 Finally, .github/workflows/ci.yml will contain the CI pipeline configuration for GitHub Actions.
 

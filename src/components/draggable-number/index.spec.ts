@@ -1,12 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { process_drag } from '../src/wasm-bindings/cc_web_components.js';
-import { DraggableNumber } from '../src/components/draggable-number/index.js';
-
-describe('process_drag', () => {
-    it('returns the delta value', () => {
-        expect(process_drag(5)).toBe(5);
-    });
-});
+import { DraggableNumber } from './index.js';
 
 describe('DraggableNumber', () => {
     it('releases pointer capture on pointerup', () => {

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { defineDraggableNumber } from '../src/components/draggable-number';
-import { definePropertyInput } from '../src/components/property-input';
+import { defineDraggableNumber } from '../draggable-number';
+import { definePropertyInput } from './index';
 
 defineDraggableNumber();
 definePropertyInput();
@@ -15,10 +15,10 @@ const hasDom = typeof document !== 'undefined';
             </cc-property-input>
         `;
 
-        const container = document.querySelector('cc-property-input') as any;
+        const container = document.querySelector('cc-property-input') as HTMLElement & { value: number };
         const [first, second] = Array.from(
             container.querySelectorAll('cc-draggable-number')
-        ) as any[];
+        ) as (HTMLElement & { value: number })[];
 
         expect(first.value).toBe(5);
         expect(second.value).toBe(5);
