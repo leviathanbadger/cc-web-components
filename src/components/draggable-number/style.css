@@ -1,0 +1,8 @@
+:host {
+    display: inline-block;
+    cursor: ew-resize;
+}
+
+input {
+    width: 4rem;
+}

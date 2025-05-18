@@ -1,12 +1,10 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, css, unsafeCSS } from 'lit';
+import componentStyles from './style.css?inline';
+import { template } from './template';
 import { process_drag } from '../../wasm-bindings/cc_web_components.js';
 
 export class DraggableNumber extends LitElement {
-    static styles = css`
-        :host {
-            display: inline-block;
-        }
-    `;
+    static styles = css`${unsafeCSS(componentStyles)}`;
 
     static properties = {
         value: { type: Number, reflect: true }
@@ -19,15 +17,13 @@ export class DraggableNumber extends LitElement {
     value = 0;
 
     render() {
-        return html`<input
-            type="number"
-            .value=${String(this.value)}
-            @change=${this._onChange}
-            @pointerdown=${this._onPointerDown}
-            @pointermove=${this._onPointerMove}
-            @pointerup=${this._stopDrag}
-            @pointercancel=${this._stopDrag}
-        />`;
+        return template(
+            this.value,
+            this._onChange.bind(this),
+            this._onPointerDown.bind(this),
+            this._onPointerMove.bind(this),
+            this._stopDrag.bind(this)
+        );
     }
 
     private _onChange(e: Event) {
