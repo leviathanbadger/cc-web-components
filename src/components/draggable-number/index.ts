@@ -47,8 +47,10 @@ export class DraggableNumber extends LitElement {
         this.dispatchEvent(new Event('change'));
     }
 
-    private _stopDrag() {
+    private _stopDrag(e: PointerEvent) {
+        const input = e.target as HTMLInputElement;
         this._dragging = false;
+        input.releasePointerCapture(e.pointerId);
     }
 }
 
