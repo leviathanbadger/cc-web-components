@@ -52,8 +52,7 @@ describe('DraggableNumber', () => {
 });
 
 defineDraggableNumber();
-const hasDom = typeof document !== 'undefined';
-(hasDom ? describe : describe.skip)('draggable-number DOM', () => {
+describe('draggable-number DOM', () => {
     it('shows input after click', async () => {
         document.body.innerHTML = '<cc-draggable-number></cc-draggable-number>';
         const comp = document.querySelector('cc-draggable-number') as HTMLElement & { shadowRoot: ShadowRoot; updateComplete: Promise<unknown> };

@@ -13,7 +13,14 @@ export class RotationPropertyInput extends LitElement {
         value: { type: Number, reflect: true }
     };
 
-    value = 0;
+    declare value: number;
+
+    constructor() {
+        super();
+        if (!this.hasAttribute('value')) {
+            this.value = 0;
+        }
+    }
 
     private _onNumberChange(e: Event) {
         const val = (e.target as DraggableNumberElement).value;

@@ -18,8 +18,18 @@ export class DraggableNumber extends LitElement {
     private _startValue = 0;
     private _startX = 0;
 
-    value = 0;
-    type: DraggableNumberType = 'raw';
+    declare value: number;
+    declare type: DraggableNumberType;
+
+    constructor() {
+        super();
+        if (!this.hasAttribute('value')) {
+            this.value = 0;
+        }
+        if (!this.hasAttribute('type')) {
+            this.type = 'raw';
+        }
+    }
 
     private _editing = false;
 
