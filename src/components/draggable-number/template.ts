@@ -2,18 +2,30 @@ import { html } from 'lit';
 
 export const template = (
     value: number,
-    onChange: (e: Event) => void,
+    editing: boolean,
+    onBlur: (e: Event) => void,
     onKeyDown: (e: KeyboardEvent) => void,
     onPointerDown: (e: PointerEvent) => void,
     onPointerMove: (e: PointerEvent) => void,
-    onPointerUp: (e: PointerEvent) => void
-) => html`<input
-    type="number"
-    .value=${String(value)}
-    @change=${onChange}
-    @keydown=${onKeyDown}
-    @pointerdown=${onPointerDown}
-    @pointermove=${onPointerMove}
-    @pointerup=${onPointerUp}
-    @pointercancel=${onPointerUp}
-/>`;
+    onPointerUp: (e: PointerEvent) => void,
+    onClick: () => void
+) => html`
+    <span
+        tabindex="0"
+        @click=${onClick}
+        @keydown=${onKeyDown}
+        @pointerdown=${onPointerDown}
+        @pointermove=${onPointerMove}
+        @pointerup=${onPointerUp}
+        @pointercancel=${onPointerUp}
+        >${value}</span
+    >
+    ${editing
+        ? html`<input
+              type="number"
+              .value=${String(value)}
+              @blur=${onBlur}
+              @keydown=${onKeyDown}
+          />`
+        : null}
+`;
