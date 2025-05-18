@@ -755,9 +755,9 @@ The workflow (stored in .github/workflows/ci.yml) will look roughly like this:
 name: CI
 on:
   push:
-    branches: [ main ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ main ]
+    branches: [ "master" ]
 jobs:
   build-test:
     runs-on: ubuntu-latest
