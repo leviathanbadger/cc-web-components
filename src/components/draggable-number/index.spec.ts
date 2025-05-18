@@ -2,12 +2,18 @@ import { describe, it, expect, vi } from 'vitest';
 import { DraggableNumber, defineDraggableNumber } from './index.js';
 
 describe('DraggableNumber', () => {
-    it('releases pointer capture on pointerup', () => {
+    it('locks pointer on pointerdown and releases on pointerup', () => {
         const component = new DraggableNumber();
         const input = {
             setPointerCapture: vi.fn(),
-            releasePointerCapture: vi.fn()
+            releasePointerCapture: vi.fn(),
+            requestPointerLock: vi.fn()
         } as unknown as HTMLInputElement;
+
+        const exitLock = vi.fn();
+        const globalWithDoc = globalThis as { document?: Document };
+        const originalDocument = globalWithDoc.document;
+        globalWithDoc.document = { exitPointerLock: exitLock } as Document;
 
         const downEvent = {
             target: input,
@@ -16,6 +22,7 @@ describe('DraggableNumber', () => {
         } as PointerEvent;
         component['_onPointerDown'](downEvent);
         expect(input.setPointerCapture).toHaveBeenCalledWith(1);
+        expect(input.requestPointerLock).toHaveBeenCalled();
 
         const upEvent = {
             target: input,
@@ -23,6 +30,9 @@ describe('DraggableNumber', () => {
         } as PointerEvent;
         component['_stopDrag'](upEvent);
         expect(input.releasePointerCapture).toHaveBeenCalledWith(1);
+        expect(exitLock).toHaveBeenCalled();
+
+        globalWithDoc.document = originalDocument;
     });
 
     it('adjusts value with arrow keys', () => {
