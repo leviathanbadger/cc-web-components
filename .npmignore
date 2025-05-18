@@ -8,12 +8,6 @@ src/**/*.test.ts
 # Documentation and images
 readme-images/
 
-# Rust source and targets
-rust/
-target/
-Cargo.toml
-Cargo.lock
-
 # Development configuration files
 eslint.config.js
 vite.config.ts
