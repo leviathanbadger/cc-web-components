@@ -63,3 +63,16 @@ Run `npm run test` to execute the test suite.
 Linting is performed on both TypeScript and Rust code using ESLint, rustfmt and
 clippy. Install the Rust components with `rustup component add rustfmt clippy`.
 Run `npm run lint` to check formatting and common issues.
+
+## Rotation Property Input
+
+`<cc-rotation-property-input>` displays an angle as full rotations and partial degrees.
+The value is shown in the format `Nx±D°`, where `N` is the number of full `360°` rotations
+and `D` is the remaining degrees. Internally it uses `cc-property-input` with two nested
+`cc-draggable-number` elements.
+
+```html
+<cc-rotation-property-input value="390"></cc-rotation-property-input>
+```
+
+The example above renders the value as `1x+30°`.
