@@ -76,6 +76,10 @@ value is formatted and interpreted:
 - `part-rotation` – shows the remaining degrees after removing complete
   rotations.
 
+The overlay input used when editing is absolutely positioned, so place
+`cc-draggable-number` inside a relatively positioned container to keep the
+overlay aligned.
+
 ## Rotation Property Input
 
 `<cc-rotation-property-input>` displays an angle as full rotations and partial degrees.
