@@ -1,7 +1,7 @@
 import { html } from 'lit';
 
 export const template = (
-    value: number,
+    value: string | number,
     editing: boolean,
     onBlur: (e: Event) => void,
     onKeyDown: (e: KeyboardEvent) => void,

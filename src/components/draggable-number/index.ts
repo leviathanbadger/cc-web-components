@@ -150,13 +150,15 @@ export class DraggableNumber extends LitElement {
         this.dispatchEvent(new Event('change'));
     }
 
-    private _formatValue(): number {
+    private _formatValue(): string | number {
         if (this.type === 'whole-rotation') {
             return Math.trunc(this.value / 360);
         }
         if (this.type === 'part-rotation') {
             const rotations = Math.trunc(this.value / 360);
-            return this.value - rotations * 360;
+            const val = this.value - rotations * 360;
+            const sign = val >= 0 ? '+' : '-';
+            return `${sign}${Math.abs(val)}`;
         }
         if (this.type === 'percent') {
             return this.value * 100;
