@@ -1,7 +1,7 @@
 name: CI
 on:
   push:
-    branches: [ master ]
+    branches: ["**"]
   pull_request:
 jobs:
   build-test:
@@ -19,7 +19,7 @@ jobs:
           key: node-deps-${{ hashFiles('package-lock.json') }}
           restore-keys: node-deps-
       - name: Install NPM dependencies
-        run: npm ci || true
+        run: npm ci
       - name: Set up Rust
         uses: actions-rs/toolchain@v1
         with:
