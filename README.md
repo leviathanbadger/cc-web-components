@@ -39,6 +39,13 @@ I may also use the Houdini CSS APIs to create CSS properties and animations cust
 components. Finally, I'm intending to see how much of this can be automated using Codex, and how much
 babysitting is required to get it to work.
 
+## Installation
+
+From the repository root run `npm install` to download all Node dependencies.
+Building the WebAssembly components requires the Rust toolchain, including
+`rustup` and `cargo`. Install them from [rustup.rs](https://rustup.rs/) if they
+are not already available on your system.
+
 ## Getting Started
 
 This repository is set up as an NPM package using [Vite](https://vitejs.dev/) for development and bundling. Once dependencies are installed you can start the dev server with:
