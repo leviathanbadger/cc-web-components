@@ -3,8 +3,15 @@
     cursor: ew-resize;
 }
 
+span {
+    user-select: none;
+}
+
 input {
     width: 4rem;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 input:focus {

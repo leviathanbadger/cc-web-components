@@ -14,43 +14,61 @@ export class DraggableNumber extends LitElement {
     } as const;
 
     private _dragging = false;
+    private _moved = false;
     private _startValue = 0;
     private _startX = 0;
 
     value = 0;
     type: DraggableNumberType = 'raw';
 
+    private _editing = false;
+
+    get editing() {
+        return this._editing;
+    }
+
+    private _setEditing(val: boolean) {
+        const old = this._editing;
+        this._editing = val;
+        this.requestUpdate('editing', old);
+    }
+
     render() {
         return template(
             this._formatValue(),
-            this._onChange.bind(this),
+            this.editing,
+            this._onBlur.bind(this),
             this._onKeyDown.bind(this),
             this._onPointerDown.bind(this),
             this._onPointerMove.bind(this),
-            this._stopDrag.bind(this)
+            this._stopDrag.bind(this),
+            this._onClick.bind(this)
         );
     }
 
-    private _onChange(e: Event) {
+    private _onBlur(e: Event) {
         const input = e.target as HTMLInputElement;
         const raw = parseFloat(input.value);
         if (!isNaN(raw)) {
             this.value = this._parseValue(raw);
             this.dispatchEvent(new Event('change'));
         }
+        this._setEditing(false);
     }
 
     private _onPointerDown(e: PointerEvent) {
-        const input = e.target as HTMLInputElement;
+        const target = e.target as HTMLElement;
         this._dragging = true;
+        this._moved = false;
         this._startX = e.clientX;
         this._startValue = this.value;
-        input.setPointerCapture(e.pointerId);
+        target.setPointerCapture(e.pointerId);
     }
 
     private _onPointerMove(e: PointerEvent) {
         if (!this._dragging) return;
         const delta = e.clientX - this._startX;
+        if (delta !== 0) this._moved = true;
         let change = process_drag(delta);
         if (this.type === 'whole-rotation') {
             change *= 360;
@@ -83,13 +101,32 @@ export class DraggableNumber extends LitElement {
     }
 
     private _stopDrag(e: PointerEvent) {
-        const input = e.target as HTMLInputElement;
+        const target = e.target as HTMLElement;
         this._dragging = false;
-        input.releasePointerCapture(e.pointerId);
+        target.releasePointerCapture(e.pointerId);
+    }
+
+    private _onClick() {
+        if (!this._moved) {
+            this._setEditing(true);
+        }
+        this._moved = false;
     }
 
     private _onKeyDown(e: KeyboardEvent) {
-        if (e.key === 'ArrowUp' || e.key === 'ArrowRight') {
+        if (this.editing) {
+            if (e.key === 'Enter' || e.key === 'Escape') {
+                const input = e.target as HTMLInputElement;
+                this._onBlur({ target: input } as Event);
+                e.preventDefault();
+            }
+            return;
+        }
+
+        if (e.key === 'Enter') {
+            this._setEditing(true);
+            e.preventDefault();
+        } else if (e.key === 'ArrowUp' || e.key === 'ArrowRight') {
             this.value += 1;
             this.dispatchEvent(new Event('change'));
             e.preventDefault();
