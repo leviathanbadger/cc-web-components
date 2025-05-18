@@ -210,6 +210,22 @@ describe('DraggableNumber', () => {
         globalWithDoc.document = originalDoc;
     });
 
+    it('accumulates movement correctly when pointer is locked', () => {
+        const component = new DraggableNumber();
+        const target = {
+            setPointerCapture: vi.fn(),
+            requestPointerLock: vi.fn()
+        } as unknown as HTMLElement;
+        const globalWithDoc = globalThis as { document?: Document & { pointerLockElement?: Element } };
+        const originalDoc = globalWithDoc.document;
+        globalWithDoc.document = { pointerLockElement: target } as unknown as Document & { pointerLockElement?: Element };
+        component['_onPointerDown']({ target, clientX: 0, pointerId: 1 } as unknown as PointerEvent);
+        component['_onPointerMove']({ movementX: 3 } as unknown as PointerEvent);
+        component['_onPointerMove']({ movementX: 2 } as unknown as PointerEvent);
+        expect(component.value).toBe(5);
+        globalWithDoc.document = originalDoc;
+    });
+
     it('click does not start editing after a drag', () => {
         const component = new DraggableNumber();
         const target = { setPointerCapture: vi.fn() } as unknown as HTMLElement;
