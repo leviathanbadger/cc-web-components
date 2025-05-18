@@ -99,8 +99,18 @@ export class DraggableNumber extends LitElement {
                 this._focusDisplayNext = false;
             }
         }
-        if (changed.has('disabled') && this.disabled && this.editing) {
-            this._setEditing(false);
+        if (changed.has('disabled') && this.disabled) {
+            if (this.editing) {
+                this._setEditing(false);
+            }
+            if (
+                typeof document !== 'undefined' &&
+                typeof (document as Document & { exitPointerLock?: () => void }).exitPointerLock ===
+                    'function'
+            ) {
+                (document as Document & { exitPointerLock?: () => void }).exitPointerLock();
+            }
+            this._dragging = false;
         }
     }
 
