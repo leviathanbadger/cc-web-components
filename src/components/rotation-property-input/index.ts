@@ -12,12 +12,14 @@ export class RotationPropertyInput extends LitElement {
     static properties = {
         value: { type: Number, reflect: true },
         min: { type: Number, reflect: true },
-        max: { type: Number, reflect: true }
+        max: { type: Number, reflect: true },
+        disabled: { type: Boolean, reflect: true }
     };
 
     declare value: number;
     declare min: number | null;
     declare max: number | null;
+    declare disabled: boolean;
 
     constructor() {
         super();
@@ -29,6 +31,9 @@ export class RotationPropertyInput extends LitElement {
         }
         if (!this.hasAttribute('max')) {
             this.max = null;
+        }
+        if (!this.hasAttribute('disabled')) {
+            this.disabled = false;
         }
     }
 
@@ -49,7 +54,8 @@ export class RotationPropertyInput extends LitElement {
             this.value,
             this._onNumberChange.bind(this),
             this.min,
-            this.max
+            this.max,
+            this.disabled
         );
     }
 }

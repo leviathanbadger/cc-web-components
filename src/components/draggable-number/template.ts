@@ -11,10 +11,12 @@ export const template = (
     onClick: () => void,
     min: number | null,
     max: number | null,
-    step: number | null
+    step: number | null,
+    disabled: boolean
 ) => html`
     <span
-        tabindex="0"
+        tabindex="${disabled ? -1 : 0}"
+        aria-disabled="${disabled ? 'true' : 'false'}"
         @click=${onClick}
         @keydown=${onKeyDown}
         @pointerdown=${onPointerDown}
@@ -30,6 +32,7 @@ export const template = (
               .min=${min === null ? '' : String(min)}
               .max=${max === null ? '' : String(max)}
               .step=${step === null ? '' : String(step)}
+              ?disabled=${disabled}
               @blur=${onBlur}
               @keydown=${onKeyDown}
           />`

@@ -101,4 +101,17 @@ describe('property-input', () => {
         expect(changeCount).toBe(1);
         expect(child.value).toBe(2);
     });
+
+    it('forwards disabled state to children', async () => {
+        document.body.innerHTML = `
+            <cc-property-input disabled>
+                <cc-draggable-number></cc-draggable-number>
+            </cc-property-input>
+        `;
+
+        const container = document.querySelector('cc-property-input') as HTMLElement & { updateComplete: Promise<unknown> };
+        await container.updateComplete;
+        const child = container.querySelector('cc-draggable-number') as HTMLElement & { disabled: boolean };
+        expect(child.disabled).toBe(true);
+    });
 });

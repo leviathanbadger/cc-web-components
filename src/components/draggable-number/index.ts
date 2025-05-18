@@ -34,7 +34,8 @@ export class DraggableNumber extends LitElement {
         type: { type: String },
         min: { type: Number, reflect: true },
         max: { type: Number, reflect: true },
-        step: { type: Number, reflect: true }
+        step: { type: Number, reflect: true },
+        disabled: { type: Boolean, reflect: true }
     } as const;
 
     private _dragging = false;
@@ -46,6 +47,7 @@ export class DraggableNumber extends LitElement {
     declare min: number | null;
     declare max: number | null;
     declare step: number;
+    declare disabled: boolean;
 
     constructor() {
         super();
@@ -60,6 +62,9 @@ export class DraggableNumber extends LitElement {
         }
         if (!this.hasAttribute('max')) {
             this.max = null;
+        }
+        if (!this.hasAttribute('disabled')) {
+            this.disabled = false;
         }
     }
 
@@ -94,6 +99,9 @@ export class DraggableNumber extends LitElement {
                 this._focusDisplayNext = false;
             }
         }
+        if (changed.has('disabled') && this.disabled && this.editing) {
+            this._setEditing(false);
+        }
     }
 
     render() {
@@ -108,11 +116,16 @@ export class DraggableNumber extends LitElement {
             this._onClick.bind(this),
             this.min,
             this.max,
-            this.step
+            this.step,
+            this.disabled
         );
     }
 
     private _onBlur(e: Event) {
+        if (this.disabled) {
+            this._setEditing(false);
+            return;
+        }
         const input = e.target as HTMLInputElement;
         const raw = parseFloat(input.value);
         if (!isNaN(raw)) {
@@ -123,6 +136,7 @@ export class DraggableNumber extends LitElement {
     }
 
     private _onPointerDown(e: PointerEvent) {
+        if (this.disabled) return;
         const target = e.target as HTMLElement;
         this._dragging = true;
         this._moved = false;
@@ -134,7 +148,7 @@ export class DraggableNumber extends LitElement {
     }
 
     private _onPointerMove(e: PointerEvent) {
-        if (!this._dragging) return;
+        if (!this._dragging || this.disabled) return;
         let delta: number;
         const hasLock =
             typeof document !== 'undefined' && document.pointerLockElement;
@@ -207,6 +221,7 @@ export class DraggableNumber extends LitElement {
     }
 
     private _stopDrag(e: PointerEvent) {
+        if (this.disabled) return;
         const target = e.target as HTMLElement;
         this._dragging = false;
         target.releasePointerCapture(e.pointerId);
@@ -216,6 +231,7 @@ export class DraggableNumber extends LitElement {
     }
 
     private _onClick() {
+        if (this.disabled) return;
         if (!this._moved) {
             this._setEditing(true);
         }
@@ -223,6 +239,7 @@ export class DraggableNumber extends LitElement {
     }
 
     private _onKeyDown(e: KeyboardEvent) {
+        if (this.disabled) return;
         if (this.editing) {
             if (e.key === 'Enter') {
                 const input = e.target as HTMLInputElement;
