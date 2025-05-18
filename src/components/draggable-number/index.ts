@@ -31,16 +31,19 @@ export class DraggableNumber extends LitElement {
     static properties = {
         value: { type: Number, reflect: true },
         type: { type: String },
+        min: { type: Number, reflect: true },
+        max: { type: Number, reflect: true }
     } as const;
 
     private _dragging = false;
     private _moved = false;
-    private _startValue = 0;
-    private _startX = 0;
+    private _prevX = 0;
     private _lockDelta = 0;
 
     declare value: number;
     declare type: DraggableNumberType;
+    declare min: number | null;
+    declare max: number | null;
 
     constructor() {
         super();
@@ -49,6 +52,12 @@ export class DraggableNumber extends LitElement {
         }
         if (!this.hasAttribute('type')) {
             this.type = 'raw';
+        }
+        if (!this.hasAttribute('min')) {
+            this.min = null;
+        }
+        if (!this.hasAttribute('max')) {
+            this.max = null;
         }
     }
 
@@ -94,6 +103,8 @@ export class DraggableNumber extends LitElement {
             this._onPointerMove.bind(this),
             this._stopDrag.bind(this),
             this._onClick.bind(this),
+            this.min,
+            this.max
         );
     }
 
@@ -101,7 +112,7 @@ export class DraggableNumber extends LitElement {
         const input = e.target as HTMLInputElement;
         const raw = parseFloat(input.value);
         if (!isNaN(raw)) {
-            this.value = this._parseValue(raw);
+            this.value = this._applyBounds(this._parseValue(raw));
             this.dispatchEvent(new Event('change'));
         }
         this._setEditing(false);
@@ -112,8 +123,7 @@ export class DraggableNumber extends LitElement {
         this._dragging = true;
         this._moved = false;
         this._lockDelta = 0;
-        this._startX = e.clientX;
-        this._startValue = this.value;
+        this._prevX = e.clientX;
         target.setPointerCapture(e.pointerId);
         if (target.requestPointerLock) {
             target.requestPointerLock();
@@ -129,7 +139,7 @@ export class DraggableNumber extends LitElement {
             this._lockDelta += e.movementX;
             delta = this._lockDelta;
         } else {
-            delta = e.clientX - this._startX;
+            delta = e.clientX - this._prevX;
         }
 
         if (delta !== 0) this._moved = true;
@@ -140,12 +150,9 @@ export class DraggableNumber extends LitElement {
             change /= 100;
         }
 
-        if (hasLock) {
-            this.value = this._startValue + change;
-        } else {
-            this.value += change;
-            this._startValue = this.value;
-            this._startX = e.clientX;
+        this.value = this._applyBounds(this.value + change);
+        if (!hasLock) {
+            this._prevX = e.clientX;
         }
         this.dispatchEvent(new Event('change'));
     }
@@ -181,6 +188,16 @@ export class DraggableNumber extends LitElement {
         return input;
     }
 
+    private _applyBounds(val: number): number {
+        if (typeof this.min === 'number') {
+            val = Math.max(val, this.min);
+        }
+        if (typeof this.max === 'number') {
+            val = Math.min(val, this.max);
+        }
+        return val;
+    }
+
     private _stopDrag(e: PointerEvent) {
         const target = e.target as HTMLElement;
         this._dragging = false;
@@ -214,12 +231,12 @@ export class DraggableNumber extends LitElement {
             e.preventDefault();
         } else if (e.key === 'ArrowUp' || e.key === 'ArrowRight') {
             const increment = this.type === 'percent' ? 0.01 : 1;
-            this.value += increment;
+            this.value = this._applyBounds(this.value + increment);
             this.dispatchEvent(new Event('change'));
             e.preventDefault();
         } else if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') {
             const increment = this.type === 'percent' ? 0.01 : 1;
-            this.value -= increment;
+            this.value = this._applyBounds(this.value - increment);
             this.dispatchEvent(new Event('change'));
             e.preventDefault();
         }

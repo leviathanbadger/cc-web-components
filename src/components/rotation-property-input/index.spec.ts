@@ -41,4 +41,29 @@ describe('rotation-property-input', () => {
         await comp.updateComplete;
         expect(comp.value).toBe(2 * 360 + 45);
     });
+
+    it('forwards min and max to draggable numbers', async () => {
+        document.body.innerHTML = '<cc-rotation-property-input min="0" max="360"></cc-rotation-property-input>';
+        const comp = document.querySelector('cc-rotation-property-input') as HTMLElement & {
+            shadowRoot: ShadowRoot;
+            updateComplete: Promise<unknown>;
+        };
+        await comp.updateComplete;
+        const rotations = comp.shadowRoot.querySelector('[part=rotations]') as HTMLElement & {
+            min: number | null;
+            max: number | null;
+            updateComplete: Promise<unknown>;
+        };
+        const degrees = comp.shadowRoot.querySelector('[part=degrees]') as HTMLElement & {
+            min: number | null;
+            max: number | null;
+            updateComplete: Promise<unknown>;
+        };
+        await rotations.updateComplete;
+        await degrees.updateComplete;
+        expect(rotations.min).toBe(0);
+        expect(rotations.max).toBe(360);
+        expect(degrees.min).toBe(0);
+        expect(degrees.max).toBe(360);
+    });
 });

@@ -8,7 +8,9 @@ export const template = (
     onPointerDown: (e: PointerEvent) => void,
     onPointerMove: (e: PointerEvent) => void,
     onPointerUp: (e: PointerEvent) => void,
-    onClick: () => void
+    onClick: () => void,
+    min: number | null,
+    max: number | null
 ) => html`
     <span
         tabindex="0"
@@ -24,6 +26,8 @@ export const template = (
         ? html`<input
               type="number"
               .value=${String(value)}
+              .min=${min === null ? '' : String(min)}
+              .max=${max === null ? '' : String(max)}
               @blur=${onBlur}
               @keydown=${onKeyDown}
           />`
