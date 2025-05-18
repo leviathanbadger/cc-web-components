@@ -66,6 +66,19 @@ describe('DraggableNumber', () => {
         expect(downEvent.preventDefault).toHaveBeenCalled();
     });
 
+    it('uses step increments with arrow keys', () => {
+        const component = new DraggableNumber();
+        component.step = 2;
+        component.value = 0;
+
+        const upEvent = { key: 'ArrowUp', preventDefault: vi.fn() } as unknown as KeyboardEvent;
+        component['_onKeyDown'](upEvent);
+        expect(component.value).toBe(2);
+        const downEvent = { key: 'ArrowDown', preventDefault: vi.fn() } as unknown as KeyboardEvent;
+        component['_onKeyDown'](downEvent);
+        expect(component.value).toBe(0);
+    });
+
     it('respects min and max values', () => {
         const component = new DraggableNumber();
         component.min = 0;
@@ -122,6 +135,16 @@ describe('DraggableNumber', () => {
         expect(component.value).toBe(10);
         expect(component['_moved']).toBe(true);
         expect(dispatch).toHaveBeenCalled();
+    });
+
+    it('rounds value to step when dragging', () => {
+        const component = new DraggableNumber();
+        component.step = 2;
+        component.value = 0;
+        const target = { setPointerCapture: vi.fn() } as unknown as HTMLElement;
+        component['_onPointerDown']({ target, clientX: 0, pointerId: 1 } as unknown as PointerEvent);
+        component['_onPointerMove']({ clientX: 3 } as unknown as PointerEvent);
+        expect(component.value).toBe(4);
     });
 
     it('resets previous position after each move without pointer lock', () => {
@@ -256,6 +279,21 @@ describe('draggable-number DOM', () => {
         const input = comp.shadowRoot.querySelector('input') as HTMLInputElement;
         expect(input.min).toBe('1');
         expect(input.max).toBe('5');
+    });
+
+    it('passes step to the input', async () => {
+        document.body.innerHTML =
+            '<cc-draggable-number step="0.5" value="1"></cc-draggable-number>';
+        const comp = document.querySelector('cc-draggable-number') as HTMLElement & {
+            shadowRoot: ShadowRoot;
+            updateComplete: Promise<unknown>;
+        };
+        await comp.updateComplete;
+        const span = comp.shadowRoot.querySelector('span') as HTMLElement;
+        span.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        await comp.updateComplete;
+        const input = comp.shadowRoot.querySelector('input') as HTMLInputElement;
+        expect(input.step).toBe('0.5');
     });
 
     it('focuses and selects the input on edit start', async () => {
