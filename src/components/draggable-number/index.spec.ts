@@ -243,7 +243,7 @@ describe('DraggableNumber', () => {
         expect(event.preventDefault).toHaveBeenCalled();
     });
 
-    it('enter and escape keys blur when editing', () => {
+    it('enter blurs while escape cancels editing', () => {
         const component = new DraggableNumber();
         component['_setEditing'](true);
         const blurSpy = vi.spyOn(component as unknown as { _onBlur: (e: Event) => void }, '_onBlur');
@@ -255,7 +255,19 @@ describe('DraggableNumber', () => {
         component['_setEditing'](true);
         const escEvent = { key: 'Escape', preventDefault: vi.fn(), target: { value: '7' } } as unknown as KeyboardEvent;
         component['_onKeyDown'](escEvent);
-        expect(blurSpy).toHaveBeenCalledTimes(2);
+        expect(blurSpy).toHaveBeenCalledTimes(1);
+        expect(escEvent.preventDefault).toHaveBeenCalled();
+        expect(component.editing).toBe(false);
+    });
+
+    it('escape cancels changes when editing', () => {
+        const component = new DraggableNumber();
+        component.value = 5;
+        component['_setEditing'](true);
+        const escEvent = { key: 'Escape', preventDefault: vi.fn(), target: { value: '10' } } as unknown as KeyboardEvent;
+        component['_onKeyDown'](escEvent);
+        expect(component.value).toBe(5);
+        expect(component.editing).toBe(false);
         expect(escEvent.preventDefault).toHaveBeenCalled();
     });
 });

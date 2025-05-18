@@ -220,10 +220,14 @@ export class DraggableNumber extends LitElement {
 
     private _onKeyDown(e: KeyboardEvent) {
         if (this.editing) {
-            if (e.key === 'Enter' || e.key === 'Escape') {
+            if (e.key === 'Enter') {
                 const input = e.target as HTMLInputElement;
                 this._focusDisplayNext = true;
                 this._onBlur({ target: input } as unknown as Event);
+                e.preventDefault();
+            } else if (e.key === 'Escape') {
+                this._focusDisplayNext = true;
+                this._setEditing(false);
                 e.preventDefault();
             }
             return;
