@@ -1,10 +1,12 @@
 :host {
     display: inline-block;
     cursor: ew-resize;
+    --cc-mutable-property-color: currentColor;
 }
 
 span {
     user-select: none;
+    color: var(--cc-mutable-property-color);
 }
 
 input {
@@ -15,6 +17,6 @@ input {
 }
 
 input:focus {
-    outline: 2px solid currentColor;
+    outline: 2px solid var(--cc-mutable-property-color);
     outline-offset: 2px;
 }
