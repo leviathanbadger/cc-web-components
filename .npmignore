@@ -1,0 +1,26 @@
+# Examples and demos
+examples/
+
+# Test and spec files
+src/**/*.spec.ts
+src/**/*.test.ts
+
+# Documentation and images
+readme-images/
+
+# Rust source and targets
+rust/
+target/
+Cargo.toml
+Cargo.lock
+
+# Development configuration files
+eslint.config.js
+vite.config.ts
+vitest.setup.ts
+tsconfig.json
+package-lock.json
+
+# Node modules (shouldn't be published)
+node_modules/
+
