@@ -12,7 +12,8 @@ if (typeof CSS !== 'undefined' && 'registerProperty' in CSS) {
             inherits: true,
             initialValue: 'currentColor',
         });
-    } catch {
+    }
+    catch {
         // Ignore errors from re-registering or unsupported browsers
     }
 }
@@ -86,7 +87,8 @@ export class DraggableNumber extends LitElement {
                         input.select();
                     }
                 }
-            } else if (this._focusDisplayNext) {
+            }
+            else if (this._focusDisplayNext) {
                 const span = this.shadowRoot?.querySelector('span');
                 span?.focus();
                 this._focusDisplayNext = false;
@@ -138,7 +140,8 @@ export class DraggableNumber extends LitElement {
             typeof document !== 'undefined' && document.pointerLockElement;
         if (hasLock) {
             delta = e.movementX;
-        } else {
+        }
+        else {
             delta = e.clientX - this._prevX;
         }
 
@@ -146,7 +149,8 @@ export class DraggableNumber extends LitElement {
         let change = process_drag(delta);
         if (this.type === 'whole-rotation') {
             change *= 360;
-        } else if (this.type === 'percent') {
+        }
+        else if (this.type === 'percent') {
             change /= 100;
         }
 
@@ -225,7 +229,8 @@ export class DraggableNumber extends LitElement {
                 this._focusDisplayNext = true;
                 this._onBlur({ target: input } as unknown as Event);
                 e.preventDefault();
-            } else if (e.key === 'Escape') {
+            }
+            else if (e.key === 'Escape') {
                 this._focusDisplayNext = true;
                 this._setEditing(false);
                 e.preventDefault();
@@ -236,12 +241,14 @@ export class DraggableNumber extends LitElement {
         if (e.key === 'Enter') {
             this._setEditing(true);
             e.preventDefault();
-        } else if (e.key === 'ArrowUp' || e.key === 'ArrowRight') {
+        }
+        else if (e.key === 'ArrowUp' || e.key === 'ArrowRight') {
             const increment = this.step ?? (this.type === 'percent' ? 0.01 : 1);
             this.value = this._applyBounds(this.value + increment);
             this.dispatchEvent(new Event('change'));
             e.preventDefault();
-        } else if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') {
+        }
+        else if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') {
             const increment = this.step ?? (this.type === 'percent' ? 0.01 : 1);
             this.value = this._applyBounds(this.value - increment);
             this.dispatchEvent(new Event('change'));

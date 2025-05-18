@@ -27,7 +27,8 @@ export default [
             indent: ['error', 4],
             quotes: ['error', 'single'],
             'no-trailing-spaces': 'error',
-            'eol-last': ['error', 'always']
+            'eol-last': ['error', 'always'],
+            'brace-style': ['error', 'stroustrup']
         }
     })
 ];
