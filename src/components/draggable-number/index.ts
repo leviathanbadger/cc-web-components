@@ -3,6 +3,20 @@ import componentStyles from './style.css?inline';
 import { template } from './template';
 import { process_drag } from '../../wasm-bindings/cc_web_components.js';
 
+// Register the custom property for configurable colors if supported
+if (typeof CSS !== 'undefined' && 'registerProperty' in CSS) {
+    try {
+        CSS.registerProperty({
+            name: '--cc-mutable-property-color',
+            syntax: '<color>',
+            inherits: true,
+            initialValue: 'currentColor',
+        });
+    } catch {
+        // Ignore errors from re-registering or unsupported browsers
+    }
+}
+
 export type DraggableNumberType =
     | 'raw'
     | 'whole-rotation'
@@ -10,11 +24,13 @@ export type DraggableNumberType =
     | 'percent';
 
 export class DraggableNumber extends LitElement {
-    static styles = css`${unsafeCSS(componentStyles)}`;
+    static styles = css`
+        ${unsafeCSS(componentStyles)}
+    `;
 
     static properties = {
         value: { type: Number, reflect: true },
-        type: { type: String }
+        type: { type: String },
     } as const;
 
     private _dragging = false;
@@ -77,7 +93,7 @@ export class DraggableNumber extends LitElement {
             this._onPointerDown.bind(this),
             this._onPointerMove.bind(this),
             this._stopDrag.bind(this),
-            this._onClick.bind(this)
+            this._onClick.bind(this),
         );
     }
 
