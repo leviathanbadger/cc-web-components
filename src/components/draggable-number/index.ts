@@ -117,6 +117,8 @@ export class DraggableNumber extends LitElement {
         let change = process_drag(delta);
         if (this.type === 'whole-rotation') {
             change *= 360;
+        } else if (this.type === 'percent') {
+            change /= 100;
         }
         this.value = this._startValue + change;
         this.dispatchEvent(new Event('change'));
@@ -183,11 +185,13 @@ export class DraggableNumber extends LitElement {
             this._setEditing(true);
             e.preventDefault();
         } else if (e.key === 'ArrowUp' || e.key === 'ArrowRight') {
-            this.value += 1;
+            const increment = this.type === 'percent' ? 0.01 : 1;
+            this.value += increment;
             this.dispatchEvent(new Event('change'));
             e.preventDefault();
         } else if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') {
-            this.value -= 1;
+            const increment = this.type === 'percent' ? 0.01 : 1;
+            this.value -= increment;
             this.dispatchEvent(new Event('change'));
             e.preventDefault();
         }
