@@ -96,6 +96,15 @@ describe('DraggableNumber', () => {
         expect(component.value).toBe(360);
     });
 
+    it('formats and parses percent type', () => {
+        const component = new DraggableNumber();
+        component.type = 'percent';
+        component.value = 0.5;
+        expect((component as unknown as { _formatValue(): number })._formatValue()).toBe(50);
+        const parsed = (component as unknown as { _parseValue(n: number): number })._parseValue(75);
+        expect(parsed).toBeCloseTo(0.75);
+    });
+
     it('tracks movement when pointer is locked', () => {
         const component = new DraggableNumber();
         const target = {
