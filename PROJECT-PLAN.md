@@ -7,14 +7,13 @@
   - [Custom Elements (Web Components)](#custom-elements-web-components) — defining reusable HTML tags.
   - [Shadow DOM](#shadow-dom) — isolating component markup and styles.
   - [Lit Library](#lit-library) — templating and reactive helpers.
-  - [Rust and WebAssembly](#rust-and-webassembly) — high-performance component logic.
   - [Pointer Events and Pointer Lock](#pointer-events-and-pointer-lock) — capturing user interaction.
   - [Houdini CSS API](#houdini-css-api) — advanced styling with custom properties.
   - [Development Tooling (Bundler, Dev Server, etc.)](#development-tooling-bundler-dev-server-etc) — build and dev environment.
 - [Potential Challenges and Mitigations](#potential-challenges-and-mitigations) — anticipated issues and solutions.
 - [Project Plan](#project-plan) — implementation roadmap.
   - [Repository Structure](#repository-structure) — directory layout.
-  - [Development Setup Steps (Vite, Rust, etc.)](#development-setup-steps-vite-rust-etc) — configuring the toolchain.
+  - [Development Setup Steps](#development-setup-steps) — configuring the toolchain.
   - [Example Consumer Project](#example-consumer-project) — sample integration.
   - [Testing Strategy](#testing-strategy) — how we verify functionality.
   - [Documentation Strategy](#documentation-strategy) — approach to writing docs.
@@ -24,8 +23,7 @@
 ## Project Overview and Goals
 
 The CC Web Components project aims to recreate and extend some of the intuitive UI controls found in
-Adobe Creative Cloud applications, as reusable web components running in the browser via WebAssembly
-(WASM) and Rust. In Adobe CC, many controls allow fluid, interactive adjustments that traditional HTML
+Adobe Creative Cloud applications. In Adobe CC, many controls allow fluid, interactive adjustments that traditional HTML
 inputs don’t easily support. For example, instead of typing numbers into a text field repeatedly,
 Adobe UIs often let the user drag left/right on a numeric value to continuously adjust it and see
 live feedback. The README’s first screenshot (a Continuous Number Input example) demonstrates this
@@ -37,19 +35,18 @@ simple example illustrates the kind of enhanced control the library will provide
 interactive number input that avoids the tedious workflow of constant manual edits.
 
 Overall, the project’s goal is to build a library of custom UI components (e.g. draggable numeric
-inputs, and potentially others inspired by Adobe’s tool palette) that developers can drop into any
-web application. These components will be implemented in Rust and compiled to WebAssembly for high
-performance, and they will be exposed as native browser elements (using the Web Components standard)
-so that they can be used with any framework or plain HTML. By leveraging the Shadow DOM for each
-component, the implementation details can remain encapsulated, making the components easy to reuse
-without fear of CSS/JS conflicts on the page. The project is also a personal learning endeavor for
-modern web technologies: the author intends to explore Rust/WASM, the Shadow DOM, the Pointer
-Events API (for mouse/touch interactions), Pointer Lock (for capturing the cursor during drag
-operations), and even the Houdini CSS API for custom styling effects. Finally, the project is an
-experiment in using AI coding tools (OpenAI’s Codex) to automate parts of the development, hence
-the “Experimenting with Codex” remark in the README. In summary, CC Web Components will blend
-cutting-edge web platform features with Rust’s performance, aiming to deliver novel UI controls
-that improve user experience in web applications similar to how Adobe’s UIs do.
+inputs and others inspired by Adobe’s tool palette) that developers can drop into any
+web application. The components are written in TypeScript and are exposed as native browser
+elements (using the Web Components standard) so that they can be used with any framework or
+plain HTML. By leveraging the Shadow DOM for each component, the implementation details remain
+encapsulated, making the components easy to reuse without fear of CSS/JS conflicts on the page.
+The project is also a personal learning endeavor for modern web technologies: the author intends
+to explore the Shadow DOM, the Pointer Events API (for mouse/touch interactions), Pointer Lock
+(for capturing the cursor during drag operations), and even the Houdini CSS API for custom styling
+effects. Finally, the project is an experiment in using AI coding tools (OpenAI’s Codex) to
+automate parts of the development. In summary, CC Web Components will blend cutting-edge web
+platform features to deliver novel UI controls that improve user experience in web applications
+similar to how Adobe’s UIs do.
 
 ## Key Technologies and Tools
 
@@ -104,30 +101,6 @@ properties change, rather than manually manipulating the DOM. Lit also supports 
 by letting us define styles that apply inside the shadow DOM of the component. Given that
 performance is a goal, it's worth noting that Lit is designed to be fast and lightweight, adding minimal overhead. We have decided to use Lit for this project to prioritize productivity and maintainability. Lit provides a modern, efficient way to create Web Components with reactive state and templating, which aligns with our needs for building a polished component library.
 
-### Rust and WebAssembly
-
-A distinguishing aspect of CC Web Components is that component logic will be written in Rust,
-compiled to WebAssembly. Rust offers memory safety and high performance, which can be advantageous
-for computationally heavy or performance-sensitive UI logic. In this context, Rust could be used to
-implement complex math or state logic for our controls, or simply as an opportunity for the developer
-to apply Rust skills to front-end development. WebAssembly (WASM) allows us to run the compiled Rust
-code in the browser. To integrate Rust-generated WebAssembly with JavaScript and the DOM, we will
-use tools from the Rust WASM ecosystem, especially wasm-bindgen. The wasm-bindgen library and CLI
-facilitate high-level interactions between Rust and JavaScript—allowing Rust code to call Web APIs
-(like document, window, or custom events) and letting JavaScript call into exported Rust functions.
-In practice, we might create Rust functions for things like processing input values or performing
-continuous updates, and expose them to JS. For example, when a user drags the number input, the
-component’s JS could call a Rust function that applies some formula or smoothing to the value.
-The Rust code can in turn use web-sys (the Rust bindings for Web APIs) to manipulate the DOM or
-dispatch events if needed. One of the goals is to have these components "run in the browser" at
-native speed, and Rust/WASM is how we achieve that. It’s worth noting that using Rust in a web
-project introduces some complexity: we’ll need to manage a build process to compile the Rust
-code to a .wasm binary, and then load that module in the web app. We will address build/tooling
-considerations later (using tools like wasm-pack and Vite’s capabilities). The payoff is that
-performance-critical parts of the component can be optimized in Rust, and we get to leverage
-Rust’s strong compile-time checks and rich type system for those parts of the code. In summary,
-Rust and WebAssembly will power the internals of these components, providing speed and efficiency,
-while the outer interface remains a standard web component that any app can use.
 
 ### Pointer Events and Pointer Lock
 
@@ -158,7 +131,7 @@ interactions beyond the standard HTML controls.
 Another advanced technology mentioned in the README is the Houdini CSS API (specifically the
 CSS Paint API and possibly others). Houdini is a collection of low-level APIs that give developers
 more control over CSS rendering. For example, the CSS Painting API allows developers to write
-a custom paint worklet – essentially a tiny rendering function in JS (or WASM) that can draw
+a custom paint worklet – essentially a tiny rendering function in JS that can draw
 graphics which can be used in CSS (like as a background image, border, mask, etc.). In the context
 of CC Web Components, Houdini could be used to create special visual effects for our controls.
 Imagine a custom slider track or a patterned background that reacts to the component’s state;
@@ -187,21 +160,15 @@ To build and test this component library effectively, we will use modern develop
     change code. For production, Vite can bundle our library using Rollup under the hood,
     producing optimized builds. We will configure Vite in library mode so that it outputs our
     components as a library (likely in both ESM and UMD formats by default). Vite’s strength is
-    that it’s minimal configuration and very fast, which suits our needs—especially since we might
-    be compiling Rust to WASM as well. Notably, Vite has built-in support for handling .wasm files:
-    we can import a WebAssembly module with a special query (e.g.
-    `import init from './my_component.wasm?init'`) to initialize it, and Vite will ensure the WASM
-    is properly served and inlined or copied to the bundle. We may also use a plugin like
-    vite-plugin-wasm to streamline integration with wasm-pack outputs, which is designed to handle
-    Rust-generated WASM modules. Overall, Vite will significantly ease the development process with
-    its fast reloads and simple configuration for building our library.
+    that it’s minimal configuration and very fast, which suits our needs. Vite’s
+    hot module replacement makes iterative development quick, and its library mode
+    outputs our components in both ESM and UMD formats.
 
   - Testing Framework: For testing, we can use Vitest, which is a Vite-native testing framework.
     Vitest is designed to reuse Vite’s configuration and pipeline, making it seamless to test our
     components in a similar environment to how they run in the browser. It supports running tests in
     a Node environment with jsdom to simulate the DOM, and even has an option to run tests in a real
-    browser if needed. Using Vitest will allow us to write unit tests for component logic (both the
-    JS/TypeScript part and potentially verifying Rust-WASM interactions via JavaScript). It’s
+    browser if needed. Using Vitest will allow us to write unit tests for component logic.
     compatible with standard testing libraries, so we can use utilities like @testing-library/dom
     or open-wc’s testing helpers for web components. The key benefit is speed and simplicity –
     Vitest runs tests blazing fast and supports modern syntax out of the box. We’ll configure Vitest
@@ -215,23 +182,14 @@ To build and test this component library effectively, we will use modern develop
     with specific plugins for Lit or Web Components to catch common issues (for example, ensuring
     that all custom elements are defined before use, or that attributes/properties are handled
     correctly). Prettier will be used to auto-format code, ensuring a consistent style (e.g., quotes,
-    spacing) across contributions. For the Rust side of the code, we will rely on rustfmt (Rust’s
-    built-in formatter) and perhaps clippy (the Rust linter) to ensure the Rust code is idiomatic
-    and free of common mistakes. We can integrate these tools into our build or CI pipeline so
-    that issues are caught early. Having linters and formatters is especially helpful in a project
-    that mixes technologies, to keep the code clean and unified.
+    spacing) across contributions. We can integrate these tools into our build or CI pipeline so
+    that issues are caught early. Having linters and formatters is especially helpful to keep the code clean and unified.
 
   - Continuous Integration & Publishing: We plan to use GitHub Actions as our CI/CD pipeline
     solution. This will let us automate building the project, running tests, and even publishing
-    the library to NPM. In CI, we will set up a workflow that on each push (and pull request) runs
-    through the steps of installing dependencies, building the Rust code to WASM, running the JS
-    build with Vite, and executing all tests. This ensures that each change doesn’t break anything.
-    For publishing, we can create an Action that triggers on a version tag (e.g., when we push a Git
-    tag like v1.0.0), which then runs the build and publishes the package to the NPM registry. Using
-    GH Actions will help catch integration issues between Rust and JS builds on a clean environment
-    and will automate the release process so we consistently ship the library with all necessary
-    files (including the .wasm assets). We’ll detail a sample GitHub Actions configuration in the
-    Project Plan section below.
+    the library to NPM. In CI we will install dependencies, run the JS build with Vite and execute
+    all tests. For publishing we can create an Action that triggers on a version tag (e.g., when we
+    push a Git tag like v1.0.0) and publishes the package to the NPM registry.
 
 With the combination of these tools – Vite for development/build, Vitest for testing,
 ESLint/Prettier for code quality, and GitHub Actions for automation – the project will have a robust
@@ -239,59 +197,16 @@ workflow to support development and distribution of the component library.
 
 ## Potential Challenges and Mitigations
 
-Building a library that spans Rust and Web technologies comes with several challenges. Below is a
-list of some technical or architectural pain points we anticipate, along with proposed solutions or
-best practices to address them:
+Building a component library comes with several challenges. Below is a list of some technical or
+architectural pain points we anticipate, along with proposed solutions or best practices to address them:
 
-  - Rust/WASM Build Integration: Coordinating the Rust build (to produce WebAssembly) with the
-    front-end build can be tricky. If not automated, developers might have to manually recompile
-    the Rust code whenever it changes. Mitigation: Use a tool like wasm-pack to compile Rust
-    into a ready-to-use NPM package, or a Vite plugin to trigger Rust compilation. We can add a
-    step in the Vite dev server that watches for changes in the Rust src and rebuilds the WASM.
-    Another approach is to include the wasm-bindgen output as part of the npm build script.
-    By scripting this or using a plugin, we ensure that whenever npm run build or npm run dev is
-    executed, the latest Rust code is compiled to my_component.wasm and included. Vite’s
-    documentation notes that WebAssembly ES module integration isn’t native yet, but using the
-    `?init` import or community plugins is the way to go. We will follow those recommendations
-    so that the Rust side seamlessly integrates with the JS bundler.
+  - Bundle Size and Distribution: Keeping the library small is important. Mitigation: use
+    Vite’s library build so only the necessary code is included, mark heavy dependencies as
+    external when appropriate, and rely on tree shaking so apps only pay for what they use.
 
-  - Passing Data Between JS and WASM: Communication overhead between JavaScript and WebAssembly
-    can be a concern, especially if we call into WASM on every animation frame or pointer move.
-    Unoptimized calls could become a bottleneck. Mitigation: Design the interface between JS and
-    Rust carefully. For example, if continuous pointer moves are sending many events, consider
-    debouncing or processing them in Rust entirely. We can have the Rust code maintain state
-    and only send needed updates to JS (or vice versa). Also, using simple data types (numbers,
-    arrays) that map directly to WASM memory will minimize overhead. In critical loops, prefer
-    to keep logic on one side (all-JS or all-Rust) rather than bouncing back and forth each
-    frame. Fortunately, modern JS engines and WASM are pretty fast at calling each other, but
-    we will profile if performance issues arise and adjust (e.g., batch updates, or move more
-    logic into Rust to avoid excessive calls).
-
-  - Bundle Size and Distribution: Including a WebAssembly binary and the supporting JS could
-    inflate our package size. Also, ensuring the .wasm file is correctly published to NPM and
-    loaded by consumers is a point of complexity. Mitigation: Use release-mode optimizations
-    for Rust (and enable wasm-opt if possible) to keep the WASM binary small. WebAssembly can
-    be very compact, but debug info can bloat it, so we will produce minified WASM for releases.
-    For distribution, since we’ll use Vite’s library build, we might let Vite handle inlining
-    small WASM files or copying them. Vite will inline .wasm below a certain size into the
-    bundle (base64 encoded) or otherwise treat it as an asset and automatically fetch it at
-    runtime. We’ll test the consumer experience: ideally, a user installing our NPM package
-    can just import the component, and behind the scenes the JS will fetch or instantiate
-    the WASM. We’ll document if any extra steps are needed. Additionally, we should provide
-    both ESM and UMD builds (which Vite can do) so that the library can be used in a
-    `<script>` tag or in Node-based toolchains. Care will be taken to mark heavy dependencies
-    as external if needed, and to tree-shake unused code, so apps only pay for what they use.
-
-  - Development Environment Setup Complexity: Setting up a project with both a Node.js toolchain
-    and Rust toolchain could be a barrier (developers need to install Rust, etc.). Mitigation:
-    Clearly document the setup steps (as we will in this plan) and consider automating some
-    checks. For example, our project’s README can note “Install Rust via rustup before running
-    build.” In the GitHub Actions CI, we will use actions-rs/toolchain to ensure Rust is
-    installed, and the Node environment for Vite, so that the build always has both available.
-    We could also create a script that checks for Rust and prints a friendly message if not
-    found. Using a monorepo structure (with perhaps a Yarn/NPM workspace and a Cargo project)
-    will help isolate concerns but also means one repository to clone that has everything.
-    As long as instructions are clear, this should be manageable.
+  - Development Environment Setup Complexity: Setting up the Node.js toolchain and other
+    dependencies could be a barrier for contributors. Mitigation: clearly document the setup steps
+    and provide helper scripts where possible so the project is easy to get running.
 
   - Testing Web Components with Shadow DOM: Writing automated tests for shadow DOM elements
     can be a bit involved, because test code might need to pierce into the shadow DOM to query
@@ -309,13 +224,13 @@ best practices to address them:
     to inspect shadow DOM internals in our tests. In summary, testing will require a bit of
     boilerplate, but using the right tools and helpers will mitigate the difficulty.
 
-  - Ensuring Cross-Browser Compatibility: Our use of modern APIs (Web Components, WASM, pointer
+  - Ensuring Cross-Browser Compatibility: Our use of modern APIs (Web Components, pointer
     events, etc.) means older browsers (like IE11 or old Edge) won’t support the library. This
     may not be a real “pain point” if we target evergreen browsers, but it’s worth acknowledging.
     Mitigation: Clearly state the supported browsers (likely the last two versions of Chrome,
     Firefox, Safari, and Edge). If necessary, include polyfills for Custom Elements and Shadow
     DOM (there are polyfill libraries for Web Components) for any environment that might lack
-    them. However, since Web Components and WASM have been supported by all major evergreen
+    them. However, since Web Components have been supported by all major evergreen
     browsers for a few years, we may decide not to bundle polyfills and instead note the
     requirements. For pointer events, virtually all modern browsers support them (and if not,
     we can fall back to mouse events). For Houdini, as noted, we will check for support before
@@ -366,7 +281,6 @@ Organizing the repository clearly will make development easier. Below is a propo
 cc-web-components/
 ├── package.json               # NPM package manifest (for the JS/TS part)
 ├── vite.config.ts             # Vite configuration, including library build settings
-├── Cargo.toml                 # Rust crate manifest (for the Rust/WASM part)
 ├── src/                       # Source code for the web component library
 │   ├── index.ts               # Main entry point that registers all custom elements
 │   ├── components/           # Directory for individual component implementations
@@ -375,12 +289,7 @@ cc-web-components/
 │   │   │   ├── style.css     # Component-specific styles (if not in JS)
 │   │   │   └── template.ts   # Template definition (Lit)
 │   │   └── ... (other components) ...
-│   └── wasm-bindings/        # Helper TS files to load/initialize WASM
-│       └── cc_components_bg.wasm?    # (This will be generated or copied from Rust build)
-├── rust/                      # (Optional) Rust source code directory if separated
-│   └── src/
-│       ├── lib.rs             # Rust source: component logic exposed via wasm-bindgen
-│       └── ...               # Other Rust modules
+│   └── util/                 # Helper modules for any shared functionality
 ├── examples/                  # Example projects or demo pages consuming the library
 │   └── basic-demo/
 │       ├── index.html        # A simple HTML file demonstrating usage of our components
@@ -397,19 +306,10 @@ Rationale: This structure separates concerns clearly. The src/components/ direct
 one subfolder per web component, which is helpful as the project grows to multiple controls.
 Within each component folder, we can have its specific code and styles. Using a subfolder per
 component also allows grouping related tests or assets if needed (for instance, if a component
-has a unique image or WASM file, though in our case the WASM might be common). We have a
+has a unique image file). We have a
 top-level src/index.ts which serves as the library entry point – this file will import and
 register all the components, and will be the file we point to for bundling in Vite’s config.
 
-The Rust source is contained either in rust/src/ or directly in a Rust crate at the repo
-root (with Cargo.toml). We might choose to put the Rust code in a subfolder like rust/ to
-keep it distinct from the TS code; alternatively, the Rust project could live in the root
-if we configure Cargo to output to pkg/ for wasm-pack. The key is that Cargo produces a .wasm
-(and accompanying JS bindings) that ends up being used by our TS/JS code. One approach is
-to run wasm-pack build --target web --out-dir src/wasm-bindings – this would compile the
-Rust and place the generated cc_web_components.js and cc_web_components_bg.wasm into
-src/wasm-bindings/, which our index.ts can then import. In the structure above, wasm-bindings
-is intended for those build artifacts or any glue code needed to initialize the WASM module.
 
 The examples/ directory will contain one or more example projects or pages. To start, a
 basic-demo with an index.html is extremely useful – it can be opened in the dev server to
@@ -425,13 +325,12 @@ synchronization or pointer dragging directly alongside the relevant component so
 Finally, .github/workflows/ci.yml will contain the CI pipeline configuration for GitHub Actions.
 
 This structure is not set in stone – it can adapt – but it provides a starting point that
-accommodates our multi-language setup (Rust + TS) and the need for both library code and
-example usage.
+accommodates the library code and example usage.
 
-### Development Setup Steps (Vite, Rust, etc.)
+### Development Setup Steps
 
-Setting up the development environment involves configuring Vite for both our library build
-and for integrating Rust compilation, as well as installing other tooling:
+Setting up the development environment involves configuring Vite for our library build
+and installing other tooling:
 
 1.  Node.js Project Initialization: We will initiate an npm project (npm init) to create
     package.json. This will manage our JavaScript/TypeScript dependencies (like Vite, Vitest,
@@ -479,82 +378,6 @@ and for integrating Rust compilation, as well as installing other tooling:
     lit as external so that it won't be baked into our library (assuming consumers will also include it, or we might reconsider and bundle Lit to make it zero-config for users – that's a choice to make). We may adjust formats (maybe CJS instead of UMD if needed). Vite will
     handle minification and such for production builds.
 
-    Additionally, we need to integrate the Rust/WASM build. Since Vite doesn’t compile Rust, we have
-    two main options:
-
-      - Pre-build step: We can add an npm script like
-        `"build:wasm": "wasm-pack build rust --target web --out-dir src/wasm-bindings"` which
-        compiles the Rust crate and places the output in our src tree. Then make the main build
-        depend on this. E.g., have `"build": "npm run build:wasm && vite build"`. For dev server,
-        we might do something similar: run wasm-pack once and perhaps watch manually. In practice,
-        running the Rust build on every file save might be slow, but we probably won’t be changing
-        Rust code as frequently as TS code. We could leave it to the developer to run npm run
-        build:wasm when Rust changes, or use a tool like cargo-watch to automatically recompile
-        on file changes.
-
-      - vite-plugin-wasm: There is a community plugin to integrate Rust WASM. We could try
-        vite-plugin-wasm or specifically vite-plugin-wasm-pack. For instance, using
-        vite-plugin-wasm-pack we could do:
-
-        ```typescript
-        import wasmPack from 'vite-plugin-wasm-pack';
-        // ...
-
-        export const config = defineConfig({
-            plugins: [wasmPack('./rust')]  // path to our Rust crate
-            // ... plus the build.lib config
-        });
-
-        // ...
-        ```
-
-        This plugin will automatically run wasm-pack and handle the resulting package as part
-        of the Vite build. It makes the development server reload when the Rust code changes,
-        etc. This would greatly streamline Rust integration. If such plugin is stable, we should
-        use it. Otherwise, we go with the manual script approach.
-
-    In either case, after building, our TypeScript code can import the WASM module. If using
-    wasm-pack, it generates a JS file we can import, e.g.:
-
-    ```typescript
-    import init, { DraggableNumber } from './wasm-bindings/cc_web_components.js';
-    // `DraggableNumber` could be a Rust-exported struct or function
-    await init(); // initialize the WASM module
-    ```
-
-    Alternatively, if we manage the .wasm file ourselves, Vite allows direct import with ?init as
-    noted. For example:
-
-    ```typescript
-    import initWasm from './wasm-bindings/cc_web_components_bg.wasm?init';
-    const wasm = await initWasm();
-    ```
-
-    This returns an instance; we could then call functions on wasm.instance.exports. But using the
-    bindgen JS glue (the init function from wasm-pack) is easier since it sets up exports nicely.
-    We’ll document this in the code.
-
-4.  Rust Toolchain Setup: Ensure the Rust toolchain is installed (rustup default stable etc.) and
-    add the WASM target: `rustup target add wasm32-unknown-unknown`. In Cargo.toml, specify
-    `crate-type = ["cdylib"]` to produce a C-compatible binary for WASM. Also, include dependencies
-    like `wasm-bindgen = "..."`, `web-sys = "..."` with features for the APIs we need (e.g.,
-    Window, Document, etc. as shown). We will write Rust code in lib.rs using `#[wasm_bindgen]` to
-    expose functions or classes to JS. For example, we might have:
-
-    ```rust
-    #[wasm_bindgen]
-    pub fn set_value(val: f64) {
-        // ... some logic, perhaps store in static or return processed value
-    }
-    #[wasm_bindgen]
-    pub fn process_drag(delta: f64) -> f64 {
-        // process pointer movement delta and return a new value
-    }
-    ```
-
-    We compile with wasm-pack build or similar as described. After a successful build, ensure the
-    generated .wasm and JS are in place for the Vite side to use.
-
 5.  TypeScript and Source Code: Develop the component classes in src/components using Lit:
 
       - Create a class DraggableNumber that extends LitElement. Use the
@@ -564,12 +387,8 @@ and for integrating Rust compilation, as well as installing other tooling:
         Attach event listeners for pointer down/move (Lit allows standard DOM listeners in
         templates or manual in connectedCallback).
 
-      - Either way, inside those event handlers, we might call our Rust functions. For instance,
-        on pointermove, we calculate deltaX and call `process_drag(deltaX)` from WASM to get a
-        new value, then update this.value. Or, we can keep the logic in JS for now (e.g. increment
-        value by some sensitivity * deltaX). The Rust integration can be incremental—maybe
-        initially, Rust just provides a function to clamp or format values, and later more
-        complex things.
+      - Pointer handlers update the value. For example, on pointermove we calculate deltaX and
+        adjust the value based on a sensitivity factor. The logic can evolve over time as needed.
 
         - Use CSS to style the component. Define static styles in Lit or import a CSS module via Vite.
 
@@ -622,11 +441,9 @@ and for integrating Rust compilation, as well as installing other tooling:
     integrate with ESLint or a separate script). Also set up rustfmt.toml if needed (or just rely
     on default rustfmt). These help maintain code quality from the start.
 
-At this point, running `npm run dev` should start Vite’s dev server, compile our TS (and possibly
-trigger Rust build if configured), and serve the example page. We can manually test the component
-in the browser, using devtools to ensure everything is working (and no console errors, etc.).
-Once development is iterative, we use HMR for TS changes; for Rust changes, if not automated,
-run `npm run build:wasm` again and refresh.
+At this point, running `npm run dev` should start Vite’s dev server, compile our TS and
+serve the example page. We can manually test the component in the browser, using devtools to
+ensure everything is working (and no console errors, etc.).
 
 ### Example Consumer Project
 
@@ -666,15 +483,8 @@ integration tests:
     reach into el.shadowRoot to verify content (e.g., check that the displayed text matches the
     value property) or, in Lit, use Lit’s testing utilities to update and assert rendered output.
     We will also test edge cases: extremely large or small values, negative values, etc., to ensure
-    the component (and any Rust logic) handles them.
+    the component handles them correctly.
 
-  - Rust Unit Tests: On the Rust side, we can also include tests within the Rust crate (using Rust’s
-    `#[cfg(test)] mod tests` in lib.rs). These tests can directly call Rust functions (which might
-    be internal logic not exposed via WASM) to ensure they behave correctly. Running cargo test
-    should be part of our CI to verify the Rust logic in isolation. For example, if we have a
-    Rust function to “nudge” a value by some delta with certain acceleration curve, we can test
-    that pure function in Rust. This will give us confidence that the heavy lifting logic is
-    solid before it’s integrated with the UI.
 
   - Integration Tests (Browser-based): As the library stabilizes, we might want some tests that
     simulate user interactions in a real browser environment. Tools like Playwright or Puppeteer
@@ -694,8 +504,7 @@ integration tests:
     This might require simulating keyboard events in tests.
 
   - Continuous Testing: All these tests will run in CI on each push. We’ll use npm test to run
-    the Vitest suite (which can include Rust tests if we call cargo test too, or we run cargo
-    test separately). The goal is to catch regressions quickly. We might also set up coverage
+    the Vitest suite. The goal is to catch regressions quickly. We might also set up coverage
     reporting with Vitest to ensure our tests cover the code well.
 
 ### Documentation Strategy
@@ -737,10 +546,8 @@ Documentation is vital for a component library. Our strategy will include:
     new features, breaking changes, etc., so that users (and we) can track progress. This is part
     of documentation for those upgrading versions.
 
-  - Inline Docs: Ensure our code is well-commented, especially the Rust part where others might
-    not be as familiar. Use doc comments in Rust for any public functions (which wasm-bindgen
-    might expose). In TS, use JSDoc comments on classes and public methods/properties so that
-    IDEs show hints and any generated docs include them.
+  - Inline Docs: Ensure our code is well-commented. Use JSDoc comments on classes and public
+    methods/properties so that IDEs show hints and any generated docs include them.
 
 By combining these documentation approaches, we aim to make the project approachable both for
 contributors (developers working on the library) and consumers (developers using the library
@@ -775,24 +582,6 @@ jobs:
           restore-keys: node-deps-
       - name: Install NPM dependencies
         run: npm ci
-      - name: Set up Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          target: wasm32-unknown-unknown
-          profile: minimal
-      - name: Cache cargo registry and cargo build
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cargo/registry
-            target
-          key: rust-deps-${{ hashFiles('Cargo.lock') }}
-          restore-keys: rust-deps-
-      - name: Build Rust to WASM
-        run: npm run build:wasm   # calls wasm-pack or cargo build for WASM
-      - name: Run Tests (Rust)
-        run: cargo test --all --release
       - name: Run Tests (Vitest)
         run: npm run test -- --coverage   # run JS/TS tests, possibly with coverage
       - name: Build Library (Vite)
@@ -808,17 +597,12 @@ jobs:
 ```
 
 This build-test job does everything on each push/PR: it checks out the code, sets up Node and
-Rust, caches dependencies for speed, builds the Rust WASM, runs Rust tests, runs JS tests, lints,
-and builds the library. The caching of ~/.cargo/registry and target will greatly speed up Rust
-compilation after the first run, and caching ~/.npm (or node_modules) speeds up npm install.
-We use wasm32-unknown-unknown target for Rust as required for wasm-bindgen. We run tests in
-release mode for Rust (--release) to ensure the optimized code doesn’t have different behavior
-(and it’s faster). Vitest is run in coverage mode perhaps to collect coverage (optional).
+The workflow caches node modules for speed, runs JS tests, lints and builds the library. Vitest can
+be run in coverage mode if desired.
 
 If all steps pass, we know the commit is good. We might also consider adding a matrix for
 different OS (windows-latest, macos-latest) or different Node versions to ensure broad
-compatibility, but since this is a library (mostly OS-agnostic except the Rust build), we can
-stick to Ubuntu for simplicity.
+compatibility, but since this is a library we can stick to Ubuntu for simplicity.
 
 For the CD (Continuous Deployment) part – publishing to NPM – we can extend this workflow or
 use a separate one. One safe approach is to publish only when a new Git tag is pushed. For example:
@@ -837,7 +621,6 @@ use a separate one. One safe approach is to publish only when a new Git tag is p
       - name: Install and Build
         run: |
           npm ci
-          npm run build:wasm
           npm run build
       - name: Publish to NPM
         run: npm publish
@@ -848,8 +631,7 @@ use a separate one. One safe approach is to publish only when a new Git tag is p
 This job triggers when we push a tag like v1.0.0. It assumes we have an NPM token stored in the
 repository secrets. It rebuilds the project (to be sure we’re packaging the latest code) and then
 runs npm publish. We’d configure package.json with the proper name, version (which should match
-the tag ideally), and files to include (we’ll ensure dist/ and the .wasm file are included in
-the package, possibly via an "files" field or by not excluding them).
+the tag ideally) and ensure the correct files are included in the package.
 
 By structuring the workflow with a separate publish step dependent on tests passing, we ensure we
 only release when the build is green. Also, using tags to trigger means we control releases
@@ -865,8 +647,8 @@ to a service or upload to Codecov, etc.).
 ### Closing Notes
 
 Following this project plan, we will set up the cc-web-components repository with a solid
-foundation. The combination of Web Components (Custom Elements + Shadow DOM), powered by
-Rust/WASM for performance, and modern tools like Lit and Vite will enable us to create a
+foundation. The combination of Web Components (Custom Elements + Shadow DOM) and modern tools like
+Lit and Vite will enable us to create a
 truly framework-agnostic, high-performance component library. By anticipating challenges and
 implementing best practices (for development workflow, testing, and documentation), we aim
 to ensure the project is not only fun and educational for the developer but also yields a useful
@@ -874,5 +656,5 @@ library that others can easily adopt. The end result will be a set of intuitive,
 (like the draggable number input and beyond) that can enhance user experiences in web applications,
 much like Adobe’s UIs have done on the desktop. With the project infrastructure in place, the
 next steps will be to incrementally build and refine each component, continuously testing and
-documenting as we go. The journey will involve deep dives into both Rust and Web APIs, fulfilling
-the learning goals while producing something concretely valuable.
+documenting as we go. The journey will involve deep dives into modern Web APIs, fulfilling the
+learning goals while producing something concretely valuable.
