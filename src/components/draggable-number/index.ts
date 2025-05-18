@@ -63,6 +63,9 @@ export class DraggableNumber extends LitElement {
         this._startX = e.clientX;
         this._startValue = this.value;
         target.setPointerCapture(e.pointerId);
+        if (target.requestPointerLock) {
+            target.requestPointerLock();
+        }
     }
 
     private _onPointerMove(e: PointerEvent) {
@@ -104,6 +107,9 @@ export class DraggableNumber extends LitElement {
         const target = e.target as HTMLElement;
         this._dragging = false;
         target.releasePointerCapture(e.pointerId);
+        if (typeof document !== 'undefined' && document.exitPointerLock) {
+            document.exitPointerLock();
+        }
     }
 
     private _onClick() {
