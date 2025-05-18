@@ -39,6 +39,85 @@ describe('DraggableNumber', () => {
         expect(component.value).toBe(0);
         expect(downEvent.preventDefault).toHaveBeenCalled();
     });
+
+    it('updates value and exits editing on blur', () => {
+        const component = new DraggableNumber();
+        component['_setEditing'](true);
+        component.value = 5;
+        const blurTarget = { value: '10' } as HTMLInputElement;
+        const dispatch = vi.spyOn(component, 'dispatchEvent');
+        component['_onBlur']({ target: blurTarget } as Event);
+        expect(component.value).toBe(10);
+        expect(component.editing).toBe(false);
+        expect(dispatch).toHaveBeenCalled();
+        expect(dispatch.mock.calls[0][0].type).toBe('change');
+    });
+
+    it('ignores invalid values on blur', () => {
+        const component = new DraggableNumber();
+        component['_setEditing'](true);
+        component.value = 5;
+        const blurTarget = { value: 'abc' } as HTMLInputElement;
+        const dispatch = vi.spyOn(component, 'dispatchEvent');
+        component['_onBlur']({ target: blurTarget } as Event);
+        expect(component.value).toBe(5);
+        expect(component.editing).toBe(false);
+        expect(dispatch).not.toHaveBeenCalled();
+    });
+
+    it('changes value when dragging', () => {
+        const component = new DraggableNumber();
+        component.value = 0;
+        const target = { setPointerCapture: vi.fn() } as unknown as HTMLElement;
+        component['_onPointerDown']({ target, clientX: 0, pointerId: 1 } as PointerEvent);
+        const dispatch = vi.spyOn(component, 'dispatchEvent');
+        component['_onPointerMove']({ clientX: 10 } as PointerEvent);
+        expect(component.value).toBe(10);
+        expect(component['_moved']).toBe(true);
+        expect(dispatch).toHaveBeenCalled();
+    });
+
+    it('scales drag change for whole rotations', () => {
+        const component = new DraggableNumber();
+        component.type = 'whole-rotation';
+        const target = { setPointerCapture: vi.fn() } as unknown as HTMLElement;
+        component['_onPointerDown']({ target, clientX: 0, pointerId: 1 } as PointerEvent);
+        component['_onPointerMove']({ clientX: 1 } as PointerEvent);
+        expect(component.value).toBe(360);
+    });
+
+    it('click does not start editing after a drag', () => {
+        const component = new DraggableNumber();
+        const target = { setPointerCapture: vi.fn() } as unknown as HTMLElement;
+        component['_onPointerDown']({ target, clientX: 0, pointerId: 1 } as PointerEvent);
+        component['_onPointerMove']({ clientX: 1 } as PointerEvent);
+        component['_onClick']();
+        expect(component.editing).toBe(false);
+    });
+
+    it('enter key starts editing', () => {
+        const component = new DraggableNumber();
+        const event = { key: 'Enter', preventDefault: vi.fn() } as unknown as KeyboardEvent;
+        component['_onKeyDown'](event);
+        expect(component.editing).toBe(true);
+        expect(event.preventDefault).toHaveBeenCalled();
+    });
+
+    it('enter and escape keys blur when editing', () => {
+        const component = new DraggableNumber();
+        component['_setEditing'](true);
+        const blurSpy = vi.spyOn(component as unknown as { _onBlur: (e: Event) => void }, '_onBlur');
+        const enterEvent = { key: 'Enter', preventDefault: vi.fn(), target: { value: '7' } } as unknown as KeyboardEvent;
+        component['_onKeyDown'](enterEvent);
+        expect(blurSpy).toHaveBeenCalledTimes(1);
+        expect(enterEvent.preventDefault).toHaveBeenCalled();
+
+        component['_setEditing'](true);
+        const escEvent = { key: 'Escape', preventDefault: vi.fn(), target: { value: '7' } } as unknown as KeyboardEvent;
+        component['_onKeyDown'](escEvent);
+        expect(blurSpy).toHaveBeenCalledTimes(2);
+        expect(escEvent.preventDefault).toHaveBeenCalled();
+    });
 });
 
 defineDraggableNumber();
