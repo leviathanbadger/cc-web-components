@@ -132,6 +132,13 @@ describe('DraggableNumber', () => {
 
 defineDraggableNumber();
 describe('draggable-number DOM', () => {
+    it('span is focusable', async () => {
+        document.body.innerHTML = '<cc-draggable-number></cc-draggable-number>';
+        const comp = document.querySelector('cc-draggable-number') as HTMLElement & { shadowRoot: ShadowRoot; updateComplete: Promise<unknown> };
+        await comp.updateComplete;
+        const span = comp.shadowRoot.querySelector('span');
+        expect(span?.getAttribute('tabindex')).toBe('0');
+    });
     it('shows input after click', async () => {
         document.body.innerHTML = '<cc-draggable-number></cc-draggable-number>';
         const comp = document.querySelector('cc-draggable-number') as HTMLElement & { shadowRoot: ShadowRoot; updateComplete: Promise<unknown> };
@@ -155,5 +162,35 @@ describe('draggable-number DOM', () => {
         const input = comp.shadowRoot.querySelector('input') as HTMLInputElement;
         expect(comp.shadowRoot.activeElement).toBe(input);
         expect(selectSpy).toHaveBeenCalled();
+    });
+
+    it('refocuses the span on keyboard exit', async () => {
+        document.body.innerHTML = '<cc-draggable-number value="42"></cc-draggable-number>';
+        const comp = document.querySelector('cc-draggable-number') as HTMLElement & { shadowRoot: ShadowRoot; updateComplete: Promise<unknown> };
+        await comp.updateComplete;
+        const span = comp.shadowRoot.querySelector('span') as HTMLElement;
+        span.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        await comp.updateComplete;
+        const input = comp.shadowRoot.querySelector('input') as HTMLInputElement;
+        const event = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true });
+        input.dispatchEvent(event);
+        await comp.updateComplete;
+        expect(comp.shadowRoot.querySelector('input')).toBeNull();
+        const newSpan = comp.shadowRoot.querySelector('span') as HTMLElement;
+        expect(comp.shadowRoot.activeElement).toBe(newSpan);
+    });
+
+    it('does not refocus the span when blurred', async () => {
+        document.body.innerHTML = '<cc-draggable-number value="42"></cc-draggable-number>';
+        const comp = document.querySelector('cc-draggable-number') as HTMLElement & { shadowRoot: ShadowRoot; updateComplete: Promise<unknown> };
+        await comp.updateComplete;
+        const span = comp.shadowRoot.querySelector('span') as HTMLElement;
+        span.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        await comp.updateComplete;
+        const input = comp.shadowRoot.querySelector('input') as HTMLInputElement;
+        input.dispatchEvent(new Event('blur', { bubbles: true }));
+        await comp.updateComplete;
+        const newSpan = comp.shadowRoot.querySelector('span') as HTMLElement;
+        expect(comp.shadowRoot.activeElement).not.toBe(newSpan);
     });
 });

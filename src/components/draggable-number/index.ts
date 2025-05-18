@@ -32,6 +32,7 @@ export class DraggableNumber extends LitElement {
     }
 
     private _editing = false;
+    private _focusDisplayNext = false;
 
     get editing() {
         return this._editing;
@@ -45,13 +46,19 @@ export class DraggableNumber extends LitElement {
 
     updated(changed: Map<string, unknown>) {
         super.updated(changed);
-        if (changed.has('editing') && this.editing) {
-            const input = this.shadowRoot?.querySelector('input');
-            if (input) {
-                input.focus();
-                if (typeof input.select === 'function') {
-                    input.select();
+        if (changed.has('editing')) {
+            if (this.editing) {
+                const input = this.shadowRoot?.querySelector('input');
+                if (input) {
+                    input.focus();
+                    if (typeof input.select === 'function') {
+                        input.select();
+                    }
                 }
+            } else if (this._focusDisplayNext) {
+                const span = this.shadowRoot?.querySelector('span');
+                span?.focus();
+                this._focusDisplayNext = false;
             }
         }
     }
@@ -146,6 +153,7 @@ export class DraggableNumber extends LitElement {
         if (this.editing) {
             if (e.key === 'Enter' || e.key === 'Escape') {
                 const input = e.target as HTMLInputElement;
+                this._focusDisplayNext = true;
                 this._onBlur({ target: input } as Event);
                 e.preventDefault();
             }
