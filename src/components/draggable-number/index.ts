@@ -3,7 +3,11 @@ import componentStyles from './style.css?inline';
 import { template } from './template';
 import { process_drag } from '../../wasm-bindings/cc_web_components.js';
 
-export type DraggableNumberType = 'raw' | 'whole-rotation' | 'part-rotation';
+export type DraggableNumberType =
+    | 'raw'
+    | 'whole-rotation'
+    | 'part-rotation'
+    | 'percent';
 
 export class DraggableNumber extends LitElement {
     static styles = css`${unsafeCSS(componentStyles)}`;
@@ -126,6 +130,9 @@ export class DraggableNumber extends LitElement {
             const rotations = Math.trunc(this.value / 360);
             return this.value - rotations * 360;
         }
+        if (this.type === 'percent') {
+            return this.value * 100;
+        }
         return this.value;
     }
 
@@ -137,6 +144,9 @@ export class DraggableNumber extends LitElement {
         if (this.type === 'part-rotation') {
             const rotations = Math.trunc(this.value / 360);
             return rotations * 360 + input;
+        }
+        if (this.type === 'percent') {
+            return input / 100;
         }
         return input;
     }

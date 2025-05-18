@@ -75,6 +75,8 @@ value is formatted and interpreted:
   value.
 - `part-rotation` – shows the remaining degrees after removing complete
   rotations.
+- `percent` – displays the value multiplied by `100` and parses input as a
+  percentage.
 
 The overlay input used when editing is absolutely positioned, so place
 `cc-draggable-number` inside a relatively positioned container to keep the
@@ -92,8 +94,18 @@ and `D` is the remaining degrees. Internally it uses `cc-property-input` with tw
 ```
 
 The example above renders the value as `1x+30°`.
+## Percent Property Input
 
+`<cc-percent-property-input>` displays a numeric value as a percentage.
+The component maps its internal value from the range `0`–`1` to display
+`0`–`100` without clamping. Internally it uses `cc-property-input` with a
+single `cc-draggable-number` element configured with `type="percent"`.
 
+```html
+<cc-percent-property-input value="0.35"></cc-percent-property-input>
+```
+
+The example above renders the value as `35%`.
 ## Project Plan
 
 For the full development plan and design details, see [PROJECT-PLAN.md](./PROJECT-PLAN.md).
