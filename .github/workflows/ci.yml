@@ -37,9 +37,9 @@ jobs:
       - name: Build Rust to WASM
         run: npm run build:wasm
       - name: Run Tests (Rust)
-        run: cargo test --all --release || true
+        run: cargo test --all --release
       - name: Run Tests (Vitest)
-        run: npm run test -- --coverage || true
+        run: npm run test -- --coverage
       - name: Build Library (Vite)
         run: npm run build
       - name: Upload Coverage Report
