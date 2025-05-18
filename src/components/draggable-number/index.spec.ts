@@ -35,6 +35,29 @@ describe('DraggableNumber', () => {
         globalWithDoc.document = originalDocument;
     });
 
+    it('releases pointer lock when disabled during drag', () => {
+        const component = new DraggableNumber();
+        const input = {
+            setPointerCapture: vi.fn(),
+            releasePointerCapture: vi.fn(),
+            requestPointerLock: vi.fn()
+        } as unknown as HTMLInputElement;
+
+        const exitLock = vi.fn();
+        const globalWithDoc = globalThis as { document?: Document };
+        const originalDocument = globalWithDoc.document;
+        globalWithDoc.document = { exitPointerLock: exitLock } as unknown as Document;
+
+        component['_onPointerDown']({ target: input, clientX: 0, pointerId: 1 } as unknown as PointerEvent);
+        component.disabled = true;
+        component.updated(new Map([['disabled', false]]));
+
+        expect(exitLock).toHaveBeenCalled();
+        expect((component as unknown as { _dragging: boolean })._dragging).toBe(false);
+
+        globalWithDoc.document = originalDocument;
+    });
+
     it('adjusts value with arrow keys', () => {
         const component = new DraggableNumber();
         component.value = 0;
