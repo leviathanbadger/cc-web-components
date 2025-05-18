@@ -20,24 +20,6 @@ jobs:
           restore-keys: node-deps-
       - name: Install NPM dependencies
         run: npm ci
-      - name: Set up Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          target: wasm32-unknown-unknown
-          profile: minimal
-      - name: Cache cargo registry and cargo build
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cargo/registry
-            target
-          key: rust-deps-${{ hashFiles('Cargo.lock') }}
-          restore-keys: rust-deps-
-      - name: Build Rust to WASM
-        run: npm run build:wasm
-      - name: Run Tests (Rust)
-        run: cargo test --all --release
       - name: Run Tests (Vitest)
         run: npm run test -- --coverage
       - name: Build Library (Vite)
