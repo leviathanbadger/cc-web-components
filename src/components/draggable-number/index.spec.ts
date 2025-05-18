@@ -66,6 +66,27 @@ describe('DraggableNumber', () => {
         expect(downEvent.preventDefault).toHaveBeenCalled();
     });
 
+    it('respects min and max values', () => {
+        const component = new DraggableNumber();
+        component.min = 0;
+        component.max = 5;
+
+        component.value = 5;
+        const up = { key: 'ArrowUp', preventDefault: vi.fn() } as unknown as KeyboardEvent;
+        component['_onKeyDown'](up);
+        expect(component.value).toBe(5);
+
+        component.value = 0;
+        const down = { key: 'ArrowDown', preventDefault: vi.fn() } as unknown as KeyboardEvent;
+        component['_onKeyDown'](down);
+        expect(component.value).toBe(0);
+
+        component['_setEditing'](true);
+        const blurTarget = { value: '10' } as HTMLInputElement;
+        component['_onBlur']({ target: blurTarget } as unknown as Event);
+        expect(component.value).toBe(5);
+    });
+
     it('updates value and exits editing on blur', () => {
         const component = new DraggableNumber();
         component['_setEditing'](true);
@@ -103,13 +124,13 @@ describe('DraggableNumber', () => {
         expect(dispatch).toHaveBeenCalled();
     });
 
-    it('resets start position after each move without pointer lock', () => {
+    it('resets previous position after each move without pointer lock', () => {
         const component = new DraggableNumber();
         component.value = 0;
         const target = { setPointerCapture: vi.fn() } as unknown as HTMLElement;
-        component['_onPointerDown']({ target, clientX: 100, pointerId: 1 } as PointerEvent);
+        component['_onPointerDown']({ target, clientX: 100, pointerId: 1 } as unknown as PointerEvent);
         component['_onPointerMove']({ clientX: 110 } as PointerEvent);
-        expect((component as unknown as { _startX: number })._startX).toBe(110);
+        expect((component as unknown as { _prevX: number })._prevX).toBe(110);
     });
 
     it('scales drag change for whole rotations', () => {
@@ -219,6 +240,22 @@ describe('draggable-number DOM', () => {
         span.dispatchEvent(new MouseEvent('click', { bubbles: true }));
         await comp.updateComplete;
         expect(comp.shadowRoot.querySelector('input')).not.toBeNull();
+    });
+
+    it('passes min and max to the input', async () => {
+        document.body.innerHTML =
+            '<cc-draggable-number min="1" max="5" value="2"></cc-draggable-number>';
+        const comp = document.querySelector('cc-draggable-number') as HTMLElement & {
+            shadowRoot: ShadowRoot;
+            updateComplete: Promise<unknown>;
+        };
+        await comp.updateComplete;
+        const span = comp.shadowRoot.querySelector('span') as HTMLElement;
+        span.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        await comp.updateComplete;
+        const input = comp.shadowRoot.querySelector('input') as HTMLInputElement;
+        expect(input.min).toBe('1');
+        expect(input.max).toBe('5');
     });
 
     it('focuses and selects the input on edit start', async () => {

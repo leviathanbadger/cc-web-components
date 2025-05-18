@@ -10,15 +10,25 @@ export class PercentPropertyInput extends LitElement {
     static styles = css`${unsafeCSS(componentStyles)}`;
 
     static properties = {
-        value: { type: Number, reflect: true }
+        value: { type: Number, reflect: true },
+        min: { type: Number, reflect: true },
+        max: { type: Number, reflect: true }
     };
 
     declare value: number;
+    declare min: number | null;
+    declare max: number | null;
 
     constructor() {
         super();
         if (!this.hasAttribute('value')) {
             this.value = 0;
+        }
+        if (!this.hasAttribute('min')) {
+            this.min = null;
+        }
+        if (!this.hasAttribute('max')) {
+            this.max = null;
         }
     }
 
@@ -35,7 +45,12 @@ export class PercentPropertyInput extends LitElement {
     }
 
     render() {
-        return template(this.value, this._onNumberChange.bind(this));
+        return template(
+            this.value,
+            this._onNumberChange.bind(this),
+            this.min,
+            this.max
+        );
     }
 }
 

@@ -78,6 +78,9 @@ value is formatted and interpreted:
 - `percent` – displays the value multiplied by `100` and parses input as a
   percentage.
 
+Optional `min` and `max` attributes can constrain the value. When omitted,
+no bounds are applied.
+
 The overlay input used when editing is absolutely positioned, so place
 `cc-draggable-number` inside a relatively positioned container to keep the
 overlay aligned.
@@ -88,6 +91,7 @@ overlay aligned.
 The value is shown in the format `Nx±D°`, where `N` is the number of full `360°` rotations
 and `D` is the remaining degrees. Internally it uses `cc-property-input` with two nested
 `cc-draggable-number` elements.
+`min` and `max` attributes are forwarded to both numbers.
 
 ```html
 <cc-rotation-property-input value="390"></cc-rotation-property-input>
@@ -100,6 +104,7 @@ The example above renders the value as `1x+30°`.
 The component maps its internal value from the range `0`–`1` to display
 `0`–`100` without clamping. Internally it uses `cc-property-input` with a
 single `cc-draggable-number` element configured with `type="percent"`.
+`min` and `max` attributes are passed through to that element.
 
 ```html
 <cc-percent-property-input value="0.35"></cc-percent-property-input>
