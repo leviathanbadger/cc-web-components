@@ -87,6 +87,15 @@ describe('DraggableNumber', () => {
         expect(dispatch).toHaveBeenCalled();
     });
 
+    it('resets start position after each move without pointer lock', () => {
+        const component = new DraggableNumber();
+        component.value = 0;
+        const target = { setPointerCapture: vi.fn() } as unknown as HTMLElement;
+        component['_onPointerDown']({ target, clientX: 100, pointerId: 1 } as PointerEvent);
+        component['_onPointerMove']({ clientX: 110 } as PointerEvent);
+        expect((component as unknown as { _startX: number })._startX).toBe(110);
+    });
+
     it('scales drag change for whole rotations', () => {
         const component = new DraggableNumber();
         component.type = 'whole-rotation';

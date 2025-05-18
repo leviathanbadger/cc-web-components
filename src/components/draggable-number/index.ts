@@ -107,18 +107,28 @@ export class DraggableNumber extends LitElement {
     private _onPointerMove(e: PointerEvent) {
         if (!this._dragging) return;
         let delta: number;
-        if (typeof document !== 'undefined' && document.pointerLockElement) {
+        const hasLock =
+            typeof document !== 'undefined' && document.pointerLockElement;
+        if (hasLock) {
             this._lockDelta += e.movementX;
             delta = this._lockDelta;
         } else {
             delta = e.clientX - this._startX;
         }
+
         if (delta !== 0) this._moved = true;
         let change = process_drag(delta);
         if (this.type === 'whole-rotation') {
             change *= 360;
         }
-        this.value = this._startValue + change;
+
+        if (hasLock) {
+            this.value = this._startValue + change;
+        } else {
+            this.value += change;
+            this._startValue = this.value;
+            this._startX = e.clientX;
+        }
         this.dispatchEvent(new Event('change'));
     }
 
