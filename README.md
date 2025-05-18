@@ -59,4 +59,7 @@ Building the library outputs the bundled files to `dist/`:
 npm run build
 ```
 
-Tests and linting are stubbed out for now and will be expanded as the project grows.
+Run `npm run test` to execute the test suite.
+Linting is performed on both TypeScript and Rust code using ESLint, rustfmt and
+clippy. Install the Rust components with `rustup component add rustfmt clippy`.
+Run `npm run lint` to check formatting and common issues.
