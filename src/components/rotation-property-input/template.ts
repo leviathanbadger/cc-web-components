@@ -1,22 +1,21 @@
 import { html } from 'lit';
 
 export const template = (
-    rotations: number,
-    sign: string,
-    degrees: number,
-    onRotationsChange: (e: Event) => void,
-    onDegreesChange: (e: Event) => void
-) => html`<cc-property-input>
+    value: number,
+    onChange: (e: Event) => void
+) => html`<cc-property-input .value=${value}>
     <cc-draggable-number
         part="rotations"
-        .value=${rotations}
-        @change=${onRotationsChange}
+        .value=${value}
+        type="whole-rotation"
+        @change=${onChange}
     ></cc-draggable-number>
-    <span>x${sign}</span>
+    <span>x</span>
     <cc-draggable-number
         part="degrees"
-        .value=${degrees}
-        @change=${onDegreesChange}
+        .value=${value}
+        type="part-rotation"
+        @change=${onChange}
     ></cc-draggable-number>
     <span>°</span>
 </cc-property-input>`;

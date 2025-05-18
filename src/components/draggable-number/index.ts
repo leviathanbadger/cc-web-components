@@ -3,22 +3,26 @@ import componentStyles from './style.css?inline';
 import { template } from './template';
 import { process_drag } from '../../wasm-bindings/cc_web_components.js';
 
+export type DraggableNumberType = 'raw' | 'whole-rotation' | 'part-rotation';
+
 export class DraggableNumber extends LitElement {
     static styles = css`${unsafeCSS(componentStyles)}`;
 
     static properties = {
-        value: { type: Number, reflect: true }
-    };
+        value: { type: Number, reflect: true },
+        type: { type: String }
+    } as const;
 
     private _dragging = false;
     private _startValue = 0;
     private _startX = 0;
 
     value = 0;
+    type: DraggableNumberType = 'raw';
 
     render() {
         return template(
-            this.value,
+            this._formatValue(),
             this._onChange.bind(this),
             this._onPointerDown.bind(this),
             this._onPointerMove.bind(this),
@@ -28,8 +32,11 @@ export class DraggableNumber extends LitElement {
 
     private _onChange(e: Event) {
         const input = e.target as HTMLInputElement;
-        this.value = parseFloat(input.value);
-        this.dispatchEvent(new Event('change'));
+        const raw = parseFloat(input.value);
+        if (!isNaN(raw)) {
+            this.value = this._parseValue(raw);
+            this.dispatchEvent(new Event('change'));
+        }
     }
 
     private _onPointerDown(e: PointerEvent) {
@@ -43,8 +50,35 @@ export class DraggableNumber extends LitElement {
     private _onPointerMove(e: PointerEvent) {
         if (!this._dragging) return;
         const delta = e.clientX - this._startX;
-        this.value = this._startValue + process_drag(delta);
+        let change = process_drag(delta);
+        if (this.type === 'whole-rotation') {
+            change *= 360;
+        }
+        this.value = this._startValue + change;
         this.dispatchEvent(new Event('change'));
+    }
+
+    private _formatValue(): number {
+        if (this.type === 'whole-rotation') {
+            return Math.trunc(this.value / 360);
+        }
+        if (this.type === 'part-rotation') {
+            const rotations = Math.trunc(this.value / 360);
+            return this.value - rotations * 360;
+        }
+        return this.value;
+    }
+
+    private _parseValue(input: number): number {
+        if (this.type === 'whole-rotation') {
+            const remainder = this.value - Math.trunc(this.value / 360) * 360;
+            return input * 360 + remainder;
+        }
+        if (this.type === 'part-rotation') {
+            const rotations = Math.trunc(this.value / 360);
+            return rotations * 360 + input;
+        }
+        return input;
     }
 
     private _stopDrag(e: PointerEvent) {

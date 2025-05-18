@@ -64,6 +64,18 @@ Linting is performed on both TypeScript and Rust code using ESLint, rustfmt and
 clippy. Install the Rust components with `rustup component add rustfmt clippy`.
 Run `npm run lint` to check formatting and common issues.
 
+## Draggable Number
+
+`<cc-draggable-number>` is an input that allows changing numerical values by
+clicking and dragging. It supports a `type` attribute that controls how the
+value is formatted and interpreted:
+
+- `raw` – the value is displayed as-is.
+- `whole-rotation` – shows the number of complete `360°` rotations of the
+  value.
+- `part-rotation` – shows the remaining degrees after removing complete
+  rotations.
+
 ## Rotation Property Input
 
 `<cc-rotation-property-input>` displays an angle as full rotations and partial degrees.
