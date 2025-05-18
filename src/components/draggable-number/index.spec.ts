@@ -116,8 +116,8 @@ describe('DraggableNumber', () => {
         const component = new DraggableNumber();
         component.type = 'percent';
         const target = { setPointerCapture: vi.fn() } as unknown as HTMLElement;
-        component['_onPointerDown']({ target, clientX: 0, pointerId: 1 } as PointerEvent);
-        component['_onPointerMove']({ clientX: 1 } as PointerEvent);
+        component['_onPointerDown']({ target, clientX: 0, pointerId: 1 } as unknown as PointerEvent);
+        component['_onPointerMove']({ clientX: 1 } as unknown as PointerEvent);
         expect(component.value).toBeCloseTo(0.01);
     });
 
