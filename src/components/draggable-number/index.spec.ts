@@ -366,4 +366,17 @@ describe('draggable-number DOM', () => {
         const newSpan = comp.shadowRoot.querySelector('span') as HTMLElement;
         expect(comp.shadowRoot.activeElement).not.toBe(newSpan);
     });
+
+    it('ignores interaction when disabled', () => {
+        const component = new DraggableNumber();
+        component.disabled = true;
+        component.value = 0;
+
+        component['_onClick']();
+        expect(component.editing).toBe(false);
+
+        const keyEvent = { key: 'ArrowUp' } as KeyboardEvent;
+        component['_onKeyDown'](keyEvent);
+        expect(component.value).toBe(0);
+    });
 });

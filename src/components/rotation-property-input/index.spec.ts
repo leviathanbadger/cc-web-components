@@ -66,4 +66,19 @@ describe('rotation-property-input', () => {
         expect(degrees.min).toBe(0);
         expect(degrees.max).toBe(360);
     });
+
+    it('forwards disabled to draggable numbers', async () => {
+        document.body.innerHTML = '<cc-rotation-property-input disabled></cc-rotation-property-input>';
+        const comp = document.querySelector('cc-rotation-property-input') as HTMLElement & {
+            shadowRoot: ShadowRoot;
+            updateComplete: Promise<unknown>;
+        };
+        await comp.updateComplete;
+        const rotations = comp.shadowRoot.querySelector('[part=rotations]') as HTMLElement & { disabled: boolean; updateComplete: Promise<unknown> };
+        const degrees = comp.shadowRoot.querySelector('[part=degrees]') as HTMLElement & { disabled: boolean; updateComplete: Promise<unknown> };
+        await rotations.updateComplete;
+        await degrees.updateComplete;
+        expect(rotations.disabled).toBe(true);
+        expect(degrees.disabled).toBe(true);
+    });
 });

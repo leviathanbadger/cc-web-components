@@ -8,15 +8,20 @@ export class PropertyInput extends LitElement {
     static styles = css`${unsafeCSS(componentStyles)}`;
 
     static properties = {
-        value: { type: Number, reflect: true }
+        value: { type: Number, reflect: true },
+        disabled: { type: Boolean, reflect: true }
     };
 
     declare value: number;
+    declare disabled: boolean;
 
     constructor() {
         super();
         if (!this.hasAttribute('value')) {
             this.value = 0;
+        }
+        if (!this.hasAttribute('disabled')) {
+            this.disabled = false;
         }
     }
 
@@ -32,9 +37,9 @@ export class PropertyInput extends LitElement {
     }
 
     updated(changed: Map<string, unknown>) {
-        if (changed.has('value')) {
+        if (changed.has('value') || changed.has('disabled')) {
             this._updateChildren();
-            if (changed.get('value') !== undefined) {
+            if (changed.has('value') && changed.get('value') !== undefined) {
                 this.dispatchEvent(new Event('change'));
             }
         }
@@ -52,6 +57,7 @@ export class PropertyInput extends LitElement {
             num.addEventListener('change', handler as EventListener);
             this._listeners.set(num, handler);
             num.value = this.value;
+            (num as unknown as { disabled?: boolean }).disabled = this.disabled;
         });
         this._listeners.forEach((handler, num) => {
             if (!num.isConnected || !this.contains(num)) {
@@ -75,6 +81,7 @@ export class PropertyInput extends LitElement {
             if (num.value !== this.value) {
                 num.value = this.value;
             }
+            (num as unknown as { disabled?: boolean }).disabled = this.disabled;
         });
     }
 }

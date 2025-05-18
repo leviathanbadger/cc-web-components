@@ -81,6 +81,9 @@ value is formatted and interpreted:
 Optional `min` and `max` attributes can constrain the value. When omitted,
 no bounds are applied.
 
+All input components also support a `disabled` attribute that prevents
+interaction and mirrors the semantics of native form controls.
+
 The overlay input used when editing is absolutely positioned, so place
 `cc-draggable-number` inside a relatively positioned container to keep the
 overlay aligned.
@@ -91,7 +94,8 @@ overlay aligned.
 The value is shown in the format `Nx±D°`, where `N` is the number of full `360°` rotations
 and `D` is the remaining degrees. Internally it uses `cc-property-input` with two nested
 `cc-draggable-number` elements.
-`min` and `max` attributes are forwarded to both numbers.
+`min` and `max` attributes are forwarded to both numbers. The `disabled`
+attribute disables all nested inputs.
 
 ```html
 <cc-rotation-property-input value="390"></cc-rotation-property-input>
@@ -104,7 +108,8 @@ The example above renders the value as `1x+30°`.
 The component maps its internal value from the range `0`–`1` to display
 `0`–`100` without clamping. Internally it uses `cc-property-input` with a
 single `cc-draggable-number` element configured with `type="percent"`.
-`min` and `max` attributes are passed through to that element.
+`min` and `max` attributes are passed through to that element. The `disabled`
+attribute disables the input.
 
 ```html
 <cc-percent-property-input value="0.35"></cc-percent-property-input>

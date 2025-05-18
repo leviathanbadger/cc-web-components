@@ -45,4 +45,16 @@ describe('percent-property-input', () => {
         expect(percent.min).toBe(0);
         expect(percent.max).toBe(1);
     });
+
+    it('forwards disabled to the draggable number', async () => {
+        document.body.innerHTML = '<cc-percent-property-input disabled></cc-percent-property-input>';
+        const comp = document.querySelector('cc-percent-property-input') as HTMLElement & {
+            shadowRoot: ShadowRoot;
+            updateComplete: Promise<unknown>;
+        };
+        await comp.updateComplete;
+        const percent = comp.shadowRoot.querySelector('[part=percent]') as HTMLElement & { disabled: boolean; updateComplete: Promise<unknown> };
+        await percent.updateComplete;
+        expect(percent.disabled).toBe(true);
+    });
 });
