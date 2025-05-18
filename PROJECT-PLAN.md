@@ -1,5 +1,26 @@
 # Project Plan for CC Web Components
 
+## Table of Contents
+
+- [Project Overview and Goals](#project-overview-and-goals) — project scope and objectives.
+- [Key Technologies and Tools](#key-technologies-and-tools) — overview of major frameworks and languages.
+  - [Custom Elements (Web Components)](#custom-elements-web-components) — defining reusable HTML tags.
+  - [Shadow DOM](#shadow-dom) — isolating component markup and styles.
+  - [Lit Library](#lit-library) — templating and reactive helpers.
+  - [Rust and WebAssembly](#rust-and-webassembly) — high-performance component logic.
+  - [Pointer Events and Pointer Lock](#pointer-events-and-pointer-lock) — capturing user interaction.
+  - [Houdini CSS API](#houdini-css-api) — advanced styling with custom properties.
+  - [Development Tooling (Bundler, Dev Server, etc.)](#development-tooling-bundler-dev-server-etc) — build and dev environment.
+- [Potential Challenges and Mitigations](#potential-challenges-and-mitigations) — anticipated issues and solutions.
+- [Project Plan](#project-plan) — implementation roadmap.
+  - [Repository Structure](#repository-structure) — directory layout.
+  - [Development Setup Steps (Vite, Rust, etc.)](#development-setup-steps-vite-rust-etc) — configuring the toolchain.
+  - [Example Consumer Project](#example-consumer-project) — sample integration.
+  - [Testing Strategy](#testing-strategy) — how we verify functionality.
+  - [Documentation Strategy](#documentation-strategy) — approach to writing docs.
+  - [GitHub Actions CI/CD Pipeline](#github-actions-cicd-pipeline) — automated build and release.
+  - [Closing Notes](#closing-notes) — final thoughts.
+
 ## Project Overview and Goals
 
 The CC Web Components project aims to recreate and extend some of the intuitive UI controls found in
