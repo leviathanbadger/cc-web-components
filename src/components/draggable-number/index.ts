@@ -1,7 +1,10 @@
 import { LitElement, css, unsafeCSS } from 'lit';
 import componentStyles from './style.css?inline';
 import { template } from './template';
-import { process_drag } from '../../wasm-bindings/cc_web_components.js';
+
+function process_drag(delta: number): number {
+    return delta;
+}
 
 // Register the custom property for configurable colors if supported
 if (typeof CSS !== 'undefined' && 'registerProperty' in CSS) {
