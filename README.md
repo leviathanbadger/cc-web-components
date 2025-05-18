@@ -119,3 +119,9 @@ The example above renders the value as `35%`.
 ## Project Plan
 
 For the full development plan and design details, see [PROJECT-PLAN.md](./PROJECT-PLAN.md).
+
+## Documentation
+
+Documentation is generated using [Docusaurus](https://docusaurus.io/).
+Run `npm run docs:build` to build the static site. The generated files are
+published automatically via GitHub Actions on every push to `master`.

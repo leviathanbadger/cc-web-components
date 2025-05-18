@@ -9,9 +9,13 @@
         "typecheck": "tsc --noEmit",
         "build": "npm run typecheck && npm run build:wasm && vite build",
         "lint": "npm run typecheck && eslint --ext .ts src && cargo fmt -- --check && cargo clippy -- -D warnings",
-        "test": "npm run typecheck && vitest run"
+        "test": "npm run typecheck && vitest run",
+        "docs:manifest": "cem analyze --lite --outFile custom-elements.json",
+        "docs:api": "typedoc --out docs/api src/index.ts",
+        "docs:storybook": "storybook build --docs",
+        "docs:build": "npm run docs:manifest && npm run docs:api && npm run docs:storybook && docusaurus build docs"
     },
-    "devDependencies": {
+  "devDependencies": {
         "@types/jsdom": "^21.1.7",
         "@typescript-eslint/eslint-plugin": "^8.32.1",
         "@typescript-eslint/parser": "^8.32.1",
@@ -20,7 +24,18 @@
         "prettier": "^3.5.3",
         "typescript": "^5.8.3",
         "vite": "^6.3.5",
-        "vitest": "^3.1.3"
+        "vitest": "^3.1.3",
+        "@docusaurus/core": "*",
+        "@docusaurus/preset-classic": "*",
+        "@docusaurus/plugin-content-docs": "*",
+        "@docusaurus/plugin-content-pages": "*",
+        "@docusaurus/plugin-content-blog": "*",
+        "@docusaurus/theme-live-codeblock": "*",
+        "typedoc": "*",
+        "docusaurus-plugin-typedoc": "*",
+        "@custom-elements-manifest/analyzer": "*",
+        "@storybook/web-components": "*",
+        "@storybook/addon-docs": "*"
     },
     "dependencies": {
         "lit": "^3.3.0"
