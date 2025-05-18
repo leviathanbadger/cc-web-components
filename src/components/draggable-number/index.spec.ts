@@ -13,13 +13,13 @@ describe('DraggableNumber', () => {
         const exitLock = vi.fn();
         const globalWithDoc = globalThis as { document?: Document };
         const originalDocument = globalWithDoc.document;
-        globalWithDoc.document = { exitPointerLock: exitLock } as Document;
+        globalWithDoc.document = { exitPointerLock: exitLock } as unknown as Document;
 
         const downEvent = {
             target: input,
             clientX: 0,
             pointerId: 1
-        } as PointerEvent;
+        } as unknown as PointerEvent;
         component['_onPointerDown'](downEvent);
         expect(input.setPointerCapture).toHaveBeenCalledWith(1);
         expect(input.requestPointerLock).toHaveBeenCalled();
@@ -27,7 +27,7 @@ describe('DraggableNumber', () => {
         const upEvent = {
             target: input,
             pointerId: 1
-        } as PointerEvent;
+        } as unknown as PointerEvent;
         component['_stopDrag'](upEvent);
         expect(input.releasePointerCapture).toHaveBeenCalledWith(1);
         expect(exitLock).toHaveBeenCalled();
@@ -56,7 +56,7 @@ describe('DraggableNumber', () => {
         component.value = 5;
         const blurTarget = { value: '10' } as HTMLInputElement;
         const dispatch = vi.spyOn(component, 'dispatchEvent');
-        component['_onBlur']({ target: blurTarget } as Event);
+        component['_onBlur']({ target: blurTarget } as unknown as Event);
         expect(component.value).toBe(10);
         expect(component.editing).toBe(false);
         expect(dispatch).toHaveBeenCalled();
@@ -69,7 +69,7 @@ describe('DraggableNumber', () => {
         component.value = 5;
         const blurTarget = { value: 'abc' } as HTMLInputElement;
         const dispatch = vi.spyOn(component, 'dispatchEvent');
-        component['_onBlur']({ target: blurTarget } as Event);
+        component['_onBlur']({ target: blurTarget } as unknown as Event);
         expect(component.value).toBe(5);
         expect(component.editing).toBe(false);
         expect(dispatch).not.toHaveBeenCalled();
@@ -79,9 +79,9 @@ describe('DraggableNumber', () => {
         const component = new DraggableNumber();
         component.value = 0;
         const target = { setPointerCapture: vi.fn() } as unknown as HTMLElement;
-        component['_onPointerDown']({ target, clientX: 0, pointerId: 1 } as PointerEvent);
+        component['_onPointerDown']({ target, clientX: 0, pointerId: 1 } as unknown as PointerEvent);
         const dispatch = vi.spyOn(component, 'dispatchEvent');
-        component['_onPointerMove']({ clientX: 10 } as PointerEvent);
+        component['_onPointerMove']({ clientX: 10 } as unknown as PointerEvent);
         expect(component.value).toBe(10);
         expect(component['_moved']).toBe(true);
         expect(dispatch).toHaveBeenCalled();
@@ -91,8 +91,8 @@ describe('DraggableNumber', () => {
         const component = new DraggableNumber();
         component.type = 'whole-rotation';
         const target = { setPointerCapture: vi.fn() } as unknown as HTMLElement;
-        component['_onPointerDown']({ target, clientX: 0, pointerId: 1 } as PointerEvent);
-        component['_onPointerMove']({ clientX: 1 } as PointerEvent);
+        component['_onPointerDown']({ target, clientX: 0, pointerId: 1 } as unknown as PointerEvent);
+        component['_onPointerMove']({ clientX: 1 } as unknown as PointerEvent);
         expect(component.value).toBe(360);
     });
 
@@ -113,10 +113,10 @@ describe('DraggableNumber', () => {
         } as unknown as HTMLElement;
         const globalWithDoc = globalThis as { document?: Document & { pointerLockElement?: Element } };
         const originalDoc = globalWithDoc.document;
-        globalWithDoc.document = { pointerLockElement: target } as Document & { pointerLockElement?: Element };
-        component['_onPointerDown']({ target, clientX: 0, pointerId: 1 } as PointerEvent);
+        globalWithDoc.document = { pointerLockElement: target } as unknown as Document & { pointerLockElement?: Element };
+        component['_onPointerDown']({ target, clientX: 0, pointerId: 1 } as unknown as PointerEvent);
         const dispatch = vi.spyOn(component, 'dispatchEvent');
-        component['_onPointerMove']({ movementX: 5 } as PointerEvent);
+        component['_onPointerMove']({ movementX: 5 } as unknown as PointerEvent);
         expect(component.value).toBe(5);
         expect(component['_moved']).toBe(true);
         expect(dispatch).toHaveBeenCalled();
@@ -126,8 +126,8 @@ describe('DraggableNumber', () => {
     it('click does not start editing after a drag', () => {
         const component = new DraggableNumber();
         const target = { setPointerCapture: vi.fn() } as unknown as HTMLElement;
-        component['_onPointerDown']({ target, clientX: 0, pointerId: 1 } as PointerEvent);
-        component['_onPointerMove']({ clientX: 1 } as PointerEvent);
+        component['_onPointerDown']({ target, clientX: 0, pointerId: 1 } as unknown as PointerEvent);
+        component['_onPointerMove']({ clientX: 1 } as unknown as PointerEvent);
         component['_onClick']();
         expect(component.editing).toBe(false);
     });
