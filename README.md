@@ -1,4 +1,4 @@
-# cc-web-components
+# @leviathanbadger/cc-web-components
 
 Experimenting with Codex to create WASM user controls/components mimicking some of the controls in Adobe
 CC products, written in Rust.
