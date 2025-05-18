@@ -50,6 +50,22 @@ describe('DraggableNumber', () => {
         expect(downEvent.preventDefault).toHaveBeenCalled();
     });
 
+    it('adjusts percent type with arrow keys', () => {
+        const component = new DraggableNumber();
+        component.type = 'percent';
+        component.value = 0;
+
+        const upEvent = { key: 'ArrowUp', preventDefault: vi.fn() } as unknown as KeyboardEvent;
+        component['_onKeyDown'](upEvent);
+        expect(component.value).toBeCloseTo(0.01);
+        expect(upEvent.preventDefault).toHaveBeenCalled();
+
+        const downEvent = { key: 'ArrowDown', preventDefault: vi.fn() } as unknown as KeyboardEvent;
+        component['_onKeyDown'](downEvent);
+        expect(component.value).toBeCloseTo(0);
+        expect(downEvent.preventDefault).toHaveBeenCalled();
+    });
+
     it('updates value and exits editing on blur', () => {
         const component = new DraggableNumber();
         component['_setEditing'](true);
@@ -94,6 +110,15 @@ describe('DraggableNumber', () => {
         component['_onPointerDown']({ target, clientX: 0, pointerId: 1 } as PointerEvent);
         component['_onPointerMove']({ clientX: 1 } as PointerEvent);
         expect(component.value).toBe(360);
+    });
+
+    it('scales drag change for percent type', () => {
+        const component = new DraggableNumber();
+        component.type = 'percent';
+        const target = { setPointerCapture: vi.fn() } as unknown as HTMLElement;
+        component['_onPointerDown']({ target, clientX: 0, pointerId: 1 } as PointerEvent);
+        component['_onPointerMove']({ clientX: 1 } as PointerEvent);
+        expect(component.value).toBeCloseTo(0.01);
     });
 
     it('formats and parses percent type', () => {
