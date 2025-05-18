@@ -1,7 +1,7 @@
 # @leviathanbadger/cc-web-components
 
-Experimenting with Codex to create WASM user controls/components mimicking some of the controls in Adobe
-CC products, written in Rust.
+Experimenting with Codex to create web components that mimic some of the controls found in Adobe
+CC products. The components are implemented entirely in TypeScript.
 
 One of the things I love about the Adobe Creative Cloud software is that there are new, very novel user
 components that make it easy and intuitive to work with data and information that otherwise don't have a
@@ -27,14 +27,13 @@ drag-to-change is a much more intuitive way to change the value when working on 
 ![Text Number Input](./readme-images/layer-transform-example2.png)
 
 This is a very simple example, but there are many other components that are very useful and intuitive
-to use. I want to create a library of these components in Rust, using WebAssembly to run them in the
-browser. This will allow for high-performance, interactive user interfaces that can be easily
+to use. I want to create a library of these components implemented in TypeScript so they run natively
+in the browser. This will allow for high-performance, interactive user interfaces that can be easily
 integrated into web applications. They'll show up as native components in the browser, using the shadow
-DOM to keep usage simple, and can be used in any web application that supports WebAssembly, with any
-framework, regardless of the underlying technology stack.
+DOM to keep usage simple, and can be used with any framework or technology stack.
 
-This project is mostly for fun. I want to learn or practice several new technologies, including Rust,
-WebAssembly, the shadow DOM, the pointer events API, pointer lock, and modern web development techniques.
+This project is mostly for fun. I want to learn or practice several new technologies such as the shadow
+DOM, the pointer events API, pointer lock, and modern web development techniques.
 I may also use the Houdini CSS APIs to create CSS properties and animations customized for these
 components. Finally, I'm intending to see how much of this can be automated using Codex, and how much
 babysitting is required to get it to work.
@@ -42,9 +41,6 @@ babysitting is required to get it to work.
 ## Installation
 
 From the repository root run `npm install` to download all Node dependencies.
-Building the WebAssembly components requires the Rust toolchain, including
-`rustup` and `cargo`. Install them from [rustup.rs](https://rustup.rs/) if they
-are not already available on your system.
 
 ## Getting Started
 
@@ -67,9 +63,7 @@ npm run build
 ```
 
 Run `npm run test` to execute the test suite.
-Linting is performed on both TypeScript and Rust code using ESLint, rustfmt and
-clippy. Install the Rust components with `rustup component add rustfmt clippy`.
-Run `npm run lint` to check formatting and common issues.
+Linting is performed using ESLint. Run `npm run lint` to check formatting and common issues.
 
 ## Draggable Number
 

@@ -1,7 +1,7 @@
 {
     "name": "@leviathanbadger/cc-web-components",
     "version": "0.1.0",
-    "description": "Experimenting with Codex to create WASM user controls/components mimicking some of the controls in Adobe CC products, written in Rust.",
+    "description": "Experimenting with Codex to create web components mimicking some of the controls in Adobe CC products.",
     "type": "module",
     "scripts": {
         "dev": "vite",

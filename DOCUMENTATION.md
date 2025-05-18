@@ -1,6 +1,6 @@
 # Documentation Strategy
 
-This project exposes several web components written in TypeScript and Rust. Interactive examples are useful for demonstrating how each component behaves, so Markdown files alone are not sufficient. The following approach uses free hosting on GitHub Pages, automatically scrapes documentation comments, and lets us write higher level guides.
+This project exposes several web components written entirely in TypeScript. Interactive examples are useful for demonstrating how each component behaves, so Markdown files alone are not sufficient. The following approach uses free hosting on GitHub Pages, automatically scrapes documentation comments, and lets us write higher level guides.
 
 ## Overview
 
