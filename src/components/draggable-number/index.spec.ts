@@ -100,9 +100,18 @@ describe('DraggableNumber', () => {
         const component = new DraggableNumber();
         component.type = 'percent';
         component.value = 0.5;
-        expect((component as unknown as { _formatValue(): number })._formatValue()).toBe(50);
+        expect((component as unknown as { _formatValue(): string | number })._formatValue()).toBe(50);
         const parsed = (component as unknown as { _parseValue(n: number): number })._parseValue(75);
         expect(parsed).toBeCloseTo(0.75);
+    });
+
+    it('formats part rotations with a sign', () => {
+        const component = new DraggableNumber();
+        component.type = 'part-rotation';
+        component.value = 30;
+        expect((component as unknown as { _formatValue(): string | number })._formatValue()).toBe('+30');
+        component.value = -15;
+        expect((component as unknown as { _formatValue(): string | number })._formatValue()).toBe('-15');
     });
 
     it('tracks movement when pointer is locked', () => {

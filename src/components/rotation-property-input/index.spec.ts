@@ -20,7 +20,7 @@ describe('rotation-property-input', () => {
         const degSpan = degrees.shadowRoot.querySelector('span') as HTMLElement;
 
         expect(rotSpan.textContent).toBe('1');
-        expect(degSpan.textContent).toBe('30');
+        expect(degSpan.textContent).toBe('+30');
     });
 
     it('updates value when parts change', async () => {
