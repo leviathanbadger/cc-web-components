@@ -7,7 +7,8 @@
         "esModuleInterop": true,
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
-        "outDir": "dist/types"
+        "outDir": "dist/types",
+        "types": ["vitest", "jsdom"]
     },
     "include": ["src/**/*"],
     "exclude": ["node_modules", "dist"]
