@@ -17,6 +17,7 @@ export class DraggableNumber extends LitElement {
     private _moved = false;
     private _startValue = 0;
     private _startX = 0;
+    private _lockDelta = 0;
 
     declare value: number;
     declare type: DraggableNumberType;
@@ -90,6 +91,7 @@ export class DraggableNumber extends LitElement {
         const target = e.target as HTMLElement;
         this._dragging = true;
         this._moved = false;
+        this._lockDelta = 0;
         this._startX = e.clientX;
         this._startValue = this.value;
         target.setPointerCapture(e.pointerId);
@@ -100,7 +102,13 @@ export class DraggableNumber extends LitElement {
 
     private _onPointerMove(e: PointerEvent) {
         if (!this._dragging) return;
-        const delta = e.clientX - this._startX;
+        let delta: number;
+        if (typeof document !== 'undefined' && document.pointerLockElement) {
+            this._lockDelta += e.movementX;
+            delta = this._lockDelta;
+        } else {
+            delta = e.clientX - this._startX;
+        }
         if (delta !== 0) this._moved = true;
         let change = process_drag(delta);
         if (this.type === 'whole-rotation') {
@@ -136,6 +144,7 @@ export class DraggableNumber extends LitElement {
     private _stopDrag(e: PointerEvent) {
         const target = e.target as HTMLElement;
         this._dragging = false;
+        this._lockDelta = 0;
         target.releasePointerCapture(e.pointerId);
         if (typeof document !== 'undefined' && document.exitPointerLock) {
             document.exitPointerLock();
