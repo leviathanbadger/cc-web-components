@@ -92,3 +92,8 @@ and `D` is the remaining degrees. Internally it uses `cc-property-input` with tw
 ```
 
 The example above renders the value as `1x+30°`.
+
+
+## Project Plan
+
+For the full development plan and design details, see [PROJECT-PLAN.md](./PROJECT-PLAN.md).
