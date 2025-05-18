@@ -9,14 +9,16 @@ defineRotationPropertyInput();
 
 const hasDom = typeof document !== 'undefined';
 (hasDom ? describe : describe.skip)('rotation-property-input', () => {
-    it('splits value into rotations and degrees', () => {
+    it('formats value into rotations and degrees', () => {
         document.body.innerHTML = '<cc-rotation-property-input value="390"></cc-rotation-property-input>';
         const comp = document.querySelector('cc-rotation-property-input') as any;
         const rotations = comp.shadowRoot.querySelector('[part=rotations]') as any;
         const degrees = comp.shadowRoot.querySelector('[part=degrees]') as any;
+        const rotInput = rotations.shadowRoot.querySelector('input') as HTMLInputElement;
+        const degInput = degrees.shadowRoot.querySelector('input') as HTMLInputElement;
 
-        expect(rotations.value).toBe(1);
-        expect(degrees.value).toBe(30);
+        expect(rotInput.value).toBe('1');
+        expect(degInput.value).toBe('30');
     });
 
     it('updates value when parts change', () => {
@@ -24,13 +26,15 @@ const hasDom = typeof document !== 'undefined';
         const comp = document.querySelector('cc-rotation-property-input') as any;
         const rotations = comp.shadowRoot.querySelector('[part=rotations]') as any;
         const degrees = comp.shadowRoot.querySelector('[part=degrees]') as any;
+        const rotInput = rotations.shadowRoot.querySelector('input') as HTMLInputElement;
+        const degInput = degrees.shadowRoot.querySelector('input') as HTMLInputElement;
 
-        rotations.value = 2;
-        rotations.dispatchEvent(new Event('change'));
+        rotInput.value = '2';
+        rotInput.dispatchEvent(new Event('change'));
         expect(comp.value).toBe(2 * 360 + 30);
 
-        degrees.value = 45;
-        degrees.dispatchEvent(new Event('change'));
+        degInput.value = '45';
+        degInput.dispatchEvent(new Event('change'));
         expect(comp.value).toBe(2 * 360 + 45);
     });
 });
