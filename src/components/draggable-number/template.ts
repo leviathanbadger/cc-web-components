@@ -10,7 +10,8 @@ export const template = (
     onPointerUp: (e: PointerEvent) => void,
     onClick: () => void,
     min: number | null,
-    max: number | null
+    max: number | null,
+    step: number | null
 ) => html`
     <span
         tabindex="0"
@@ -28,6 +29,7 @@ export const template = (
               .value=${String(value)}
               .min=${min === null ? '' : String(min)}
               .max=${max === null ? '' : String(max)}
+              .step=${step === null ? '' : String(step)}
               @blur=${onBlur}
               @keydown=${onKeyDown}
           />`

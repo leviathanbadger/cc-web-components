@@ -32,7 +32,8 @@ export class DraggableNumber extends LitElement {
         value: { type: Number, reflect: true },
         type: { type: String },
         min: { type: Number, reflect: true },
-        max: { type: Number, reflect: true }
+        max: { type: Number, reflect: true },
+        step: { type: Number, reflect: true }
     } as const;
 
     private _dragging = false;
@@ -44,6 +45,7 @@ export class DraggableNumber extends LitElement {
     declare type: DraggableNumberType;
     declare min: number | null;
     declare max: number | null;
+    declare step: number;
 
     constructor() {
         super();
@@ -104,7 +106,8 @@ export class DraggableNumber extends LitElement {
             this._stopDrag.bind(this),
             this._onClick.bind(this),
             this.min,
-            this.max
+            this.max,
+            this.step
         );
     }
 
@@ -195,6 +198,10 @@ export class DraggableNumber extends LitElement {
         if (typeof this.max === 'number') {
             val = Math.min(val, this.max);
         }
+        const stepVal = this.step ?? (this.type === 'percent' ? 0.01 : 1);
+        if (stepVal > 0) {
+            val = Math.round(val / stepVal) * stepVal;
+        }
         return val;
     }
 
@@ -230,12 +237,12 @@ export class DraggableNumber extends LitElement {
             this._setEditing(true);
             e.preventDefault();
         } else if (e.key === 'ArrowUp' || e.key === 'ArrowRight') {
-            const increment = this.type === 'percent' ? 0.01 : 1;
+            const increment = this.step ?? (this.type === 'percent' ? 0.01 : 1);
             this.value = this._applyBounds(this.value + increment);
             this.dispatchEvent(new Event('change'));
             e.preventDefault();
         } else if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') {
-            const increment = this.type === 'percent' ? 0.01 : 1;
+            const increment = this.step ?? (this.type === 'percent' ? 0.01 : 1);
             this.value = this._applyBounds(this.value - increment);
             this.dispatchEvent(new Event('change'));
             e.preventDefault();
