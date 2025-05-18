@@ -6,9 +6,10 @@
     "scripts": {
         "dev": "vite",
         "build:wasm": "cargo build --target wasm32-unknown-unknown --manifest-path Cargo.toml",
-        "build": "npm run build:wasm && vite build",
-        "lint": "eslint --ext .ts src && cargo fmt -- --check && cargo clippy -- -D warnings",
-        "test": "vitest run"
+        "typecheck": "tsc --noEmit",
+        "build": "npm run typecheck && npm run build:wasm && vite build",
+        "lint": "npm run typecheck && eslint --ext .ts src && cargo fmt -- --check && cargo clippy -- -D warnings",
+        "test": "npm run typecheck && vitest run"
     },
     "devDependencies": {
         "@types/jsdom": "^21.1.7",

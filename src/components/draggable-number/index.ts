@@ -173,7 +173,7 @@ export class DraggableNumber extends LitElement {
             if (e.key === 'Enter' || e.key === 'Escape') {
                 const input = e.target as HTMLInputElement;
                 this._focusDisplayNext = true;
-                this._onBlur({ target: input } as Event);
+                this._onBlur({ target: input } as unknown as Event);
                 e.preventDefault();
             }
             return;
