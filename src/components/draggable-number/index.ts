@@ -20,6 +20,7 @@ export class DraggableNumber extends LitElement {
         return template(
             this.value,
             this._onChange.bind(this),
+            this._onKeyDown.bind(this),
             this._onPointerDown.bind(this),
             this._onPointerMove.bind(this),
             this._stopDrag.bind(this)
@@ -51,6 +52,18 @@ export class DraggableNumber extends LitElement {
         const input = e.target as HTMLInputElement;
         this._dragging = false;
         input.releasePointerCapture(e.pointerId);
+    }
+
+    private _onKeyDown(e: KeyboardEvent) {
+        if (e.key === 'ArrowUp' || e.key === 'ArrowRight') {
+            this.value += 1;
+            this.dispatchEvent(new Event('change'));
+            e.preventDefault();
+        } else if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') {
+            this.value -= 1;
+            this.dispatchEvent(new Event('change'));
+            e.preventDefault();
+        }
     }
 }
 

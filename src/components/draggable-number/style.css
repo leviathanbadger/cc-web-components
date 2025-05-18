@@ -6,3 +6,8 @@
 input {
     width: 4rem;
 }
+
+input:focus {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}
