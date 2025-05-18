@@ -43,6 +43,19 @@ export class DraggableNumber extends LitElement {
         this.requestUpdate('editing', old);
     }
 
+    updated(changed: Map<string, unknown>) {
+        super.updated(changed);
+        if (changed.has('editing') && this.editing) {
+            const input = this.shadowRoot?.querySelector('input');
+            if (input) {
+                input.focus();
+                if (typeof input.select === 'function') {
+                    input.select();
+                }
+            }
+        }
+    }
+
     render() {
         return template(
             this._formatValue(),

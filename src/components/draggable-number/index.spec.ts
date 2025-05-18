@@ -143,4 +143,17 @@ describe('draggable-number DOM', () => {
         await comp.updateComplete;
         expect(comp.shadowRoot.querySelector('input')).not.toBeNull();
     });
+
+    it('focuses and selects the input on edit start', async () => {
+        document.body.innerHTML = '<cc-draggable-number value="42"></cc-draggable-number>';
+        const comp = document.querySelector('cc-draggable-number') as HTMLElement & { shadowRoot: ShadowRoot; updateComplete: Promise<unknown> };
+        await comp.updateComplete;
+        const selectSpy = vi.spyOn(HTMLInputElement.prototype, 'select');
+        const span = comp.shadowRoot.querySelector('span') as HTMLElement;
+        span.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        await comp.updateComplete;
+        const input = comp.shadowRoot.querySelector('input') as HTMLInputElement;
+        expect(comp.shadowRoot.activeElement).toBe(input);
+        expect(selectSpy).toHaveBeenCalled();
+    });
 });
