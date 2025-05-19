@@ -24,7 +24,7 @@ describe('percent-property-input', () => {
         await comp.updateComplete;
         const percent = comp.shadowRoot.querySelector('[part=percent]') as HTMLElement & { value: number; updateComplete: Promise<unknown> };
         percent.value = 0.45;
-        percent.dispatchEvent(new Event('change'));
+        percent.dispatchEvent(new Event('change', { bubbles: true }));
         await comp.updateComplete;
         expect(comp.value).toBeCloseTo(0.45);
     });

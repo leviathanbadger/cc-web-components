@@ -32,12 +32,12 @@ describe('rotation-property-input', () => {
         await rotations.updateComplete;
         await degrees.updateComplete;
         rotations.value = 2 * 360 + 30;
-        rotations.dispatchEvent(new Event('change'));
+        rotations.dispatchEvent(new Event('change', { bubbles: true }));
         await comp.updateComplete;
         expect(comp.value).toBe(2 * 360 + 30);
 
         degrees.value = 2 * 360 + 45;
-        degrees.dispatchEvent(new Event('change'));
+        degrees.dispatchEvent(new Event('change', { bubbles: true }));
         await comp.updateComplete;
         expect(comp.value).toBe(2 * 360 + 45);
     });

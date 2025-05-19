@@ -26,7 +26,6 @@ export class PropertyInput extends LitElement {
         }
     }
 
-    private _listeners = new Map<DraggableNumberElement, EventListener>();
 
     render() {
         return template(this._onSlotChange);
@@ -34,7 +33,13 @@ export class PropertyInput extends LitElement {
 
     connectedCallback() {
         super.connectedCallback();
-        this._setupListeners();
+        this.addEventListener('change', this._onChildChange as EventListener);
+        this._updateChildren();
+    }
+
+    disconnectedCallback() {
+        this.removeEventListener('change', this._onChildChange as EventListener);
+        super.disconnectedCallback();
     }
 
     updated(changed: Map<string, unknown>) {
@@ -47,28 +52,14 @@ export class PropertyInput extends LitElement {
     }
 
     private _onSlotChange = () => {
-        this._setupListeners();
+        this._updateChildren();
     };
 
-    private _setupListeners() {
-        const numbers = this.querySelectorAll<DraggableNumberElement>('cc-draggable-number');
-        numbers.forEach((num) => {
-            if (this._listeners.has(num)) return;
-            const handler = this._onChildChange;
-            num.addEventListener('change', handler as EventListener);
-            this._listeners.set(num, handler);
-            num.value = this.value;
-            (num as unknown as { disabled?: boolean }).disabled = this.disabled;
-        });
-        this._listeners.forEach((handler, num) => {
-            if (!num.isConnected || !this.contains(num)) {
-                num.removeEventListener('change', handler as EventListener);
-                this._listeners.delete(num);
-            }
-        });
-    }
-
     private _onChildChange = (e: Event) => {
+        if (e.target === this) return;
+        if (!(e.target instanceof HTMLElement)) return;
+        if (!this.contains(e.target)) return;
+        e.stopImmediatePropagation();
         const target = e.target as DraggableNumberElement;
         const newVal = typeof target.value === 'number' ? target.value : parseFloat(target.getAttribute('value') ?? '');
         if (!isNaN(newVal) && newVal !== this.value) {
