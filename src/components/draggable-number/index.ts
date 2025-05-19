@@ -38,12 +38,14 @@ export class DraggableNumber extends LitElement {
         min: { type: Number, reflect: true },
         max: { type: Number, reflect: true },
         step: { type: Number, reflect: true },
-        disabled: { type: Boolean, reflect: true }
+        disabled: { type: Boolean, reflect: true },
+        dragFactor: { type: Number, attribute: 'drag-factor', reflect: true }
     } as const;
 
     private _dragging = false;
     private _moved = false;
     private _prevX = 0;
+    private _dragRemainder = 0;
 
     declare value: number;
     declare type: DraggableNumberType;
@@ -51,6 +53,7 @@ export class DraggableNumber extends LitElement {
     declare max: number | null;
     declare step: number;
     declare disabled: boolean;
+    declare dragFactor: number;
 
     constructor() {
         super();
@@ -68,6 +71,9 @@ export class DraggableNumber extends LitElement {
         }
         if (!this.hasAttribute('disabled')) {
             this.disabled = false;
+        }
+        if (!this.hasAttribute('drag-factor')) {
+            this.dragFactor = 1;
         }
     }
 
@@ -154,6 +160,7 @@ export class DraggableNumber extends LitElement {
         const target = e.target as HTMLElement;
         this._dragging = true;
         this._moved = false;
+        this._dragRemainder = 0;
         this._prevX = e.clientX;
         target.setPointerCapture(e.pointerId);
         if (target.requestPointerLock) {
@@ -182,7 +189,12 @@ export class DraggableNumber extends LitElement {
             change /= 100;
         }
 
-        this.value = this._applyBounds(this.value + change);
+        change *= this.dragFactor ?? 1;
+
+        const raw = this.value + this._dragRemainder + change;
+        const bounded = this._applyBounds(raw);
+        this._dragRemainder = raw - bounded;
+        this.value = bounded;
         if (!hasLock) {
             this._prevX = e.clientX;
         }
@@ -238,6 +250,7 @@ export class DraggableNumber extends LitElement {
         if (this.disabled) return;
         const target = e.target as HTMLElement;
         this._dragging = false;
+        this._dragRemainder = 0;
         target.releasePointerCapture(e.pointerId);
         if (typeof document !== 'undefined' && document.exitPointerLock) {
             document.exitPointerLock();

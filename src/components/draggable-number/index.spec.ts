@@ -197,6 +197,31 @@ describe('DraggableNumber', () => {
         expect(component.value).toBeCloseTo(0.01);
     });
 
+    it('applies custom dragFactor', () => {
+        const component = new DraggableNumber();
+        component.dragFactor = 0.5;
+        const target = { setPointerCapture: vi.fn() } as unknown as HTMLElement;
+        component['_onPointerDown']({ target, clientX: 0, pointerId: 1 } as unknown as PointerEvent);
+        component['_onPointerMove']({ clientX: 10 } as unknown as PointerEvent);
+        expect(component.value).toBe(5);
+    });
+
+    it('accumulates small movements the same as a single large movement', () => {
+        const big = new DraggableNumber();
+        big.dragFactor = 0.5;
+        const target = { setPointerCapture: vi.fn() } as unknown as HTMLElement;
+        big['_onPointerDown']({ target, clientX: 0, pointerId: 1 } as unknown as PointerEvent);
+        big['_onPointerMove']({ clientX: 10 } as unknown as PointerEvent);
+
+        const small = new DraggableNumber();
+        small.dragFactor = 0.5;
+        small['_onPointerDown']({ target, clientX: 0, pointerId: 1 } as unknown as PointerEvent);
+        small['_onPointerMove']({ clientX: 5 } as unknown as PointerEvent);
+        small['_onPointerMove']({ clientX: 10 } as unknown as PointerEvent);
+
+        expect(small.value).toBe(big.value);
+    });
+
     it('formats and parses percent type', () => {
         const component = new DraggableNumber();
         component.type = 'percent';
