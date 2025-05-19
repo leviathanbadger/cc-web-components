@@ -2,9 +2,6 @@ import { LitElement, css, unsafeCSS } from 'lit';
 import componentStyles from './style.css?inline';
 import { template } from './template';
 
-function processDrag(delta: number): number {
-    return delta;
-}
 
 // Register the custom property for configurable colors if supported
 if (typeof CSS !== 'undefined' && 'registerProperty' in CSS) {
@@ -181,7 +178,7 @@ export class DraggableNumber extends LitElement {
         }
 
         if (delta !== 0) this._moved = true;
-        let change = processDrag(delta);
+        let change = delta;
         if (this.type === 'whole-rotation') {
             change *= 360;
         }
