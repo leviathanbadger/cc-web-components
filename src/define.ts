@@ -1,7 +1,4 @@
-import {
-    defineDraggableNumber,
-    DraggableNumber,
-} from './components/draggable-number';
+import { defineDraggableNumber } from './components/draggable-number';
 import {
     definePropertyInput,
     PropertyInput,
@@ -21,7 +18,6 @@ defineRotationPropertyInput();
 definePercentPropertyInput();
 
 export {
-    DraggableNumber,
     PropertyInput,
     RotationPropertyInput,
     PercentPropertyInput,
