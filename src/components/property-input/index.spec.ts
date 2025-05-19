@@ -27,7 +27,7 @@ describe('property-input', () => {
         container.addEventListener('change', () => changeCount++);
 
         first.value = 12;
-        first.dispatchEvent(new Event('change'));
+        first.dispatchEvent(new Event('change', { bubbles: true }));
         await container.updateComplete;
         await first.updateComplete;
         await second.updateComplete;
@@ -51,7 +51,7 @@ describe('property-input', () => {
         const second = document.createElement('cc-draggable-number') as HTMLElement & { value: number; updateComplete: Promise<unknown> };
         second.id = 'second';
         container.appendChild(second);
-        (container as unknown as { _onSlotChange: () => void })._onSlotChange();
+        await Promise.resolve();
         await second.updateComplete;
 
         expect(second.value).toBe(3);
@@ -61,7 +61,7 @@ describe('property-input', () => {
         container.addEventListener('change', onChange);
 
         second.value = 7;
-        second.dispatchEvent(new Event('change'));
+        second.dispatchEvent(new Event('change', { bubbles: true }));
         await container.updateComplete;
         await first.updateComplete;
         await second.updateComplete;
@@ -72,10 +72,10 @@ describe('property-input', () => {
 
         container.removeEventListener('change', onChange);
         second.remove();
-        (container as unknown as { _onSlotChange: () => void })._onSlotChange();
+        await Promise.resolve();
 
         second.value = 12;
-        second.dispatchEvent(new Event('change'));
+        second.dispatchEvent(new Event('change', { bubbles: true }));
         await container.updateComplete;
         expect(container.value).toBe(7);
     });
