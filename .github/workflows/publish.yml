@@ -25,10 +25,7 @@ jobs:
             VERSION="${GITHUB_REF#refs/tags/v}"
             npm version "$VERSION" --no-git-tag-version
             CURRENT=$(npm view @leviathanbadger/cc-web-components dist-tags.latest || echo "0.0.0")
-            node - <<'EOF'
-const semver = require('semver');
-process.exit(semver.gt(process.env.VERSION, process.env.CURRENT) ? 0 : 1);
-EOF
+          node -e "const semver = require('semver'); process.exit(semver.gt(process.env.VERSION, process.env.CURRENT) ? 0 : 1);"
             if [[ $? -eq 0 ]]; then
               NPM_TAG="latest"
             else
