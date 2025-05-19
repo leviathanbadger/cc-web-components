@@ -3,6 +3,12 @@
     "version": "0.1.0",
     "description": "Experimenting with Codex to create web components mimicking some of the controls in Adobe CC products.",
     "type": "module",
+    "main": "./dist/cc-web-components.umd.js",
+    "module": "./dist/cc-web-components.es.js",
+    "exports": {
+        ".": "./dist/cc-web-components.es.js",
+        "./define": "./dist/cc-web-components.define.es.js"
+    },
     "scripts": {
         "dev": "vite",
         "typecheck": "tsc --noEmit",
