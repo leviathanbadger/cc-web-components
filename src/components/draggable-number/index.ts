@@ -2,7 +2,7 @@ import { LitElement, css, unsafeCSS } from 'lit';
 import componentStyles from './style.css?inline';
 import { template } from './template';
 
-function process_drag(delta: number): number {
+function processDrag(delta: number): number {
     return delta;
 }
 
@@ -173,7 +173,7 @@ export class DraggableNumber extends LitElement {
         }
 
         if (delta !== 0) this._moved = true;
-        let change = process_drag(delta);
+        let change = processDrag(delta);
         if (this.type === 'whole-rotation') {
             change *= 360;
         }
