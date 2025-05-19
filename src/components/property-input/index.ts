@@ -28,7 +28,7 @@ export class PropertyInput extends LitElement {
     private _listeners = new Map<DraggableNumberElement, EventListener>();
 
     render() {
-        return template(this._onSlotChange.bind(this));
+        return template(this._onSlotChange);
     }
 
     connectedCallback() {
@@ -45,15 +45,15 @@ export class PropertyInput extends LitElement {
         }
     }
 
-    private _onSlotChange() {
+    private _onSlotChange = () => {
         this._setupListeners();
-    }
+    };
 
     private _setupListeners() {
         const numbers = this.querySelectorAll<DraggableNumberElement>('cc-draggable-number');
         numbers.forEach((num) => {
             if (this._listeners.has(num)) return;
-            const handler = this._onChildChange.bind(this);
+            const handler = this._onChildChange;
             num.addEventListener('change', handler as EventListener);
             this._listeners.set(num, handler);
             num.value = this.value;
@@ -67,13 +67,13 @@ export class PropertyInput extends LitElement {
         });
     }
 
-    private _onChildChange(e: Event) {
+    private _onChildChange = (e: Event) => {
         const target = e.target as DraggableNumberElement;
         const newVal = typeof target.value === 'number' ? target.value : parseFloat(target.getAttribute('value') ?? '');
         if (!isNaN(newVal) && newVal !== this.value) {
             this.value = newVal;
         }
-    }
+    };
 
     private _updateChildren() {
         const numbers = this.querySelectorAll<DraggableNumberElement>('cc-draggable-number');
