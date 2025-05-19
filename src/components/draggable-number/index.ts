@@ -1,6 +1,7 @@
 import { LitElement, css, unsafeCSS } from 'lit';
 import componentStyles from './style.css?inline';
 import { template } from './template';
+import { registerElement } from '../../register';
 
 
 // Register the custom property for configurable colors if supported
@@ -299,7 +300,5 @@ export class DraggableNumber extends LitElement {
 }
 
 export function defineDraggableNumber() {
-    if (!customElements.get('cc-draggable-number')) {
-        customElements.define('cc-draggable-number', DraggableNumber);
-    }
+    registerElement('cc-draggable-number', DraggableNumber);
 }

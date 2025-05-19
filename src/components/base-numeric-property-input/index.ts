@@ -2,6 +2,7 @@ import { LitElement, css, unsafeCSS } from 'lit';
 import componentStyles from './style.css?inline';
 import { defineDraggableNumber } from '../draggable-number';
 import { definePropertyInput } from '../property-input';
+import { registerElement } from '../../register';
 
 // Shared DraggableNumber element interface
 export type DraggableNumberElement = HTMLElement & { value: number };
@@ -51,7 +52,5 @@ export class BaseNumericPropertyInput extends LitElement {
 }
 
 export function defineBaseNumericPropertyInput() {
-    if (!customElements.get('cc-base-numeric-property-input')) {
-        customElements.define('cc-base-numeric-property-input', BaseNumericPropertyInput);
-    }
+    registerElement('cc-base-numeric-property-input', BaseNumericPropertyInput);
 }

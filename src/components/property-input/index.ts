@@ -1,6 +1,7 @@
 import { LitElement, css, unsafeCSS } from 'lit';
 import componentStyles from './style.css?inline';
 import { template } from './template';
+import { registerElement } from '../../register';
 
 type DraggableNumberElement = HTMLElement & { value: number };
 
@@ -87,7 +88,5 @@ export class PropertyInput extends LitElement {
 }
 
 export function definePropertyInput() {
-    if (!customElements.get('cc-property-input')) {
-        customElements.define('cc-property-input', PropertyInput);
-    }
+    registerElement('cc-property-input', PropertyInput);
 }
