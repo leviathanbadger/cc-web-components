@@ -19,34 +19,9 @@ Session.vim
 .vs/
 .dir-locals.el
 
-## Tool
-.valgrindrc
-
-## Configuration
-/bootstrap.toml
-/config.toml
-/Makefile
-config.mk
-config.stamp
-no_llvm_build
-
 ## Build
-/dl/
-/doc/
-/inst/
-/llvm/
-/mingw-build/
 /build
 /dist/
-/unicode-downloads
-# Created by `x vendor`
-/vendor
-# Created by default with `src/ci/docker/run.sh`
-/obj/
-# Created by nix dev shell / .envrc
-src/tools/nix-dev-shell/flake.lock
-
-## ICE reports
 
 ## Temporary files
 *~
@@ -54,29 +29,10 @@ src/tools/nix-dev-shell/flake.lock
 \#*\#
 .#*
 
-## Tags
-tags
-tags.*
-TAGS
-TAGS.*
-
-## Python
-__pycache__/
-*.py[cod]
-*$py.class
-
 ## Node
 node_modules
 
-## Rustdoc GUI tests
-
-## direnv
-/.envrc
-/.direnv/
-
-## nix
-/flake.nix
-flake.lock
-/default.nix
+## Coverage
+coverage/
 
 # Before adding new lines, see the comment at the top.
