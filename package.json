@@ -5,6 +5,10 @@
     "type": "module",
     "main": "./dist/cc-web-components.umd.js",
     "module": "./dist/cc-web-components.es.js",
+    "files": [
+        "dist",
+        "src/types.d.ts"
+    ],
     "exports": {
         ".": "./dist/cc-web-components.es.js",
         "./define": "./dist/cc-web-components.define.es.js"
