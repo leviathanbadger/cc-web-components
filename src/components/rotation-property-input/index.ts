@@ -9,7 +9,7 @@ export class RotationPropertyInput extends BaseNumericPropertyInput {
     render() {
         return template(
             this.value,
-            this._onNumberChange.bind(this),
+            this._onNumberChange,
             this.min,
             this.max,
             this.disabled

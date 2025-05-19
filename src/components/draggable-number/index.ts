@@ -125,12 +125,12 @@ export class DraggableNumber extends LitElement {
             this._formatValue(),
             this.value,
             this.editing,
-            this._onBlur.bind(this),
-            this._onKeyDown.bind(this),
-            this._onPointerDown.bind(this),
-            this._onPointerMove.bind(this),
-            this._stopDrag.bind(this),
-            this._onClick.bind(this),
+            this._onBlur,
+            this._onKeyDown,
+            this._onPointerDown,
+            this._onPointerMove,
+            this._stopDrag,
+            this._onClick,
             this.min,
             this.max,
             this.step,
@@ -138,7 +138,7 @@ export class DraggableNumber extends LitElement {
         );
     }
 
-    private _onBlur(e: Event) {
+    private _onBlur = (e: Event) => {
         if (this.disabled) {
             this._setEditing(false);
             return;
@@ -150,9 +150,9 @@ export class DraggableNumber extends LitElement {
             this.dispatchEvent(new Event('change'));
         }
         this._setEditing(false);
-    }
+    };
 
-    private _onPointerDown(e: PointerEvent) {
+    private _onPointerDown = (e: PointerEvent) => {
         if (this.disabled) return;
         const target = e.target as HTMLElement;
         this._dragging = true;
@@ -163,9 +163,9 @@ export class DraggableNumber extends LitElement {
         if (target.requestPointerLock) {
             target.requestPointerLock();
         }
-    }
+    };
 
-    private _onPointerMove(e: PointerEvent) {
+    private _onPointerMove = (e: PointerEvent) => {
         if (!this._dragging || this.disabled) return;
         let delta: number;
         const hasLock =
@@ -196,7 +196,7 @@ export class DraggableNumber extends LitElement {
             this._prevX = e.clientX;
         }
         this.dispatchEvent(new Event('change'));
-    }
+    };
 
     private _formatValue(): string | number {
         if (this.type === 'whole-rotation') {
@@ -243,7 +243,7 @@ export class DraggableNumber extends LitElement {
         return val;
     }
 
-    private _stopDrag(e: PointerEvent) {
+    private _stopDrag = (e: PointerEvent) => {
         if (this.disabled) return;
         const target = e.target as HTMLElement;
         this._dragging = false;
@@ -252,17 +252,17 @@ export class DraggableNumber extends LitElement {
         if (typeof document !== 'undefined' && document.exitPointerLock) {
             document.exitPointerLock();
         }
-    }
+    };
 
-    private _onClick() {
+    private _onClick = () => {
         if (this.disabled) return;
         if (!this._moved) {
             this._setEditing(true);
         }
         this._moved = false;
-    }
+    };
 
-    private _onKeyDown(e: KeyboardEvent) {
+    private _onKeyDown = (e: KeyboardEvent) => {
         if (this.disabled) return;
         if (this.editing) {
             if (e.key === 'Enter') {
@@ -295,7 +295,7 @@ export class DraggableNumber extends LitElement {
             this.dispatchEvent(new Event('change'));
             e.preventDefault();
         }
-    }
+    };
 }
 
 export function defineDraggableNumber() {
