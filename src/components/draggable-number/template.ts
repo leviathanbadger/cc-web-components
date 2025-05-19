@@ -1,7 +1,9 @@
 import { html } from 'lit';
+import { ifDefined } from 'lit/directives/if-defined.js';
 
 export const template = (
     value: string | number,
+    valueNow: number,
     editing: boolean,
     onBlur: (e: Event) => void,
     onKeyDown: (e: KeyboardEvent) => void,
@@ -15,8 +17,12 @@ export const template = (
     disabled: boolean
 ) => html`
     <span
+        role="spinbutton"
         tabindex="${disabled ? -1 : 0}"
         aria-disabled="${disabled ? 'true' : 'false'}"
+        aria-valuenow="${valueNow}"
+        aria-valuemin="${ifDefined(min === null ? undefined : min)}"
+        aria-valuemax="${ifDefined(max === null ? undefined : max)}"
         @click=${onClick}
         @keydown=${onKeyDown}
         @pointerdown=${onPointerDown}
