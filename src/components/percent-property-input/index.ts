@@ -2,6 +2,7 @@ import { css, unsafeCSS } from 'lit';
 import componentStyles from './style.css?inline';
 import { template } from './template';
 import { BaseNumericPropertyInput } from '../base-numeric-property-input';
+import { registerElement } from '../../register';
 
 export class PercentPropertyInput extends BaseNumericPropertyInput {
     static styles = css`${unsafeCSS(componentStyles)}`;
@@ -18,7 +19,5 @@ export class PercentPropertyInput extends BaseNumericPropertyInput {
 }
 
 export function definePercentPropertyInput() {
-    if (!customElements.get('cc-percent-property-input')) {
-        customElements.define('cc-percent-property-input', PercentPropertyInput);
-    }
+    registerElement('cc-percent-property-input', PercentPropertyInput);
 }
