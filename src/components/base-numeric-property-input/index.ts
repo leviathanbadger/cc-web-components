@@ -1,4 +1,5 @@
 import { LitElement, css, unsafeCSS } from 'lit';
+import { property } from 'lit/decorators.js';
 import componentStyles from './style.css?inline';
 import { defineDraggableNumber } from '../draggable-number';
 import { definePropertyInput } from '../property-input';
@@ -9,33 +10,17 @@ export type DraggableNumberElement = HTMLElement & { value: number };
 export class BaseNumericPropertyInput extends LitElement {
     static styles = css`${unsafeCSS(componentStyles)}`;
 
-    static properties = {
-        value: { type: Number, reflect: true },
-        min: { type: Number, reflect: true },
-        max: { type: Number, reflect: true },
-        disabled: { type: Boolean, reflect: true }
-    } as const;
+    @property({ type: Number, reflect: true })
+    value = 0;
 
-    declare value: number;
-    declare min: number | null;
-    declare max: number | null;
-    declare disabled: boolean;
+    @property({ type: Number, reflect: true })
+    min: number | null = null;
 
-    constructor() {
-        super();
-        if (!this.hasAttribute('value')) {
-            this.value = 0;
-        }
-        if (!this.hasAttribute('min')) {
-            this.min = null;
-        }
-        if (!this.hasAttribute('max')) {
-            this.max = null;
-        }
-        if (!this.hasAttribute('disabled')) {
-            this.disabled = false;
-        }
-    }
+    @property({ type: Number, reflect: true })
+    max: number | null = null;
+
+    @property({ type: Boolean, reflect: true })
+    disabled = false;
 
     protected _onNumberChange(e: Event) {
         const val = (e.target as DraggableNumberElement).value;

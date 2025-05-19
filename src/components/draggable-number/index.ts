@@ -1,4 +1,5 @@
 import { LitElement, css, unsafeCSS } from 'lit';
+import { property } from 'lit/decorators.js';
 import componentStyles from './style.css?inline';
 import { template } from './template';
 
@@ -32,50 +33,32 @@ export class DraggableNumber extends LitElement {
         ${unsafeCSS(componentStyles)}
     `;
 
-    static properties = {
-        value: { type: Number, reflect: true },
-        type: { type: String },
-        min: { type: Number, reflect: true },
-        max: { type: Number, reflect: true },
-        step: { type: Number, reflect: true },
-        disabled: { type: Boolean, reflect: true },
-        dragFactor: { type: Number, attribute: 'drag-factor', reflect: true }
-    } as const;
+    @property({ type: Number, reflect: true })
+    value = 0;
+
+    @property({ type: String })
+    type: DraggableNumberType = 'raw';
+
+    @property({ type: Number, reflect: true })
+    min: number | null = null;
+
+    @property({ type: Number, reflect: true })
+    max: number | null = null;
+
+    @property({ type: Number, reflect: true })
+    step: number | null = null;
+
+    @property({ type: Boolean, reflect: true })
+    disabled = false;
+
+    @property({ type: Number, attribute: 'drag-factor', reflect: true })
+    dragFactor = 1;
 
     private _dragging = false;
     private _moved = false;
     private _prevX = 0;
     private _dragRemainder = 0;
 
-    declare value: number;
-    declare type: DraggableNumberType;
-    declare min: number | null;
-    declare max: number | null;
-    declare step: number;
-    declare disabled: boolean;
-    declare dragFactor: number;
-
-    constructor() {
-        super();
-        if (!this.hasAttribute('value')) {
-            this.value = 0;
-        }
-        if (!this.hasAttribute('type')) {
-            this.type = 'raw';
-        }
-        if (!this.hasAttribute('min')) {
-            this.min = null;
-        }
-        if (!this.hasAttribute('max')) {
-            this.max = null;
-        }
-        if (!this.hasAttribute('disabled')) {
-            this.disabled = false;
-        }
-        if (!this.hasAttribute('drag-factor')) {
-            this.dragFactor = 1;
-        }
-    }
 
     private _editing = false;
     private _focusDisplayNext = false;

@@ -24,7 +24,13 @@ export default [
             node: true
         },
         rules: {
-            indent: ['error', 4],
+            indent: [
+                'error',
+                4,
+                {
+                    ignoredNodes: ['PropertyDefinition[decorators]']
+                }
+            ],
             quotes: ['error', 'single'],
             'no-trailing-spaces': 'error',
             'eol-last': ['error', 'always'],
