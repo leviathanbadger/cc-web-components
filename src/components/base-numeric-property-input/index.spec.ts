@@ -45,7 +45,9 @@ describe('base-numeric-property-input', () => {
             updateComplete: Promise<unknown>;
         };
         num.value = 8;
-        num.dispatchEvent(new Event('change', { bubbles: true }));
+        num.dispatchEvent(
+            new CustomEvent('change', { bubbles: true, detail: { value: 8 } })
+        );
         await comp.updateComplete;
         expect(comp.value).toBe(8);
     });

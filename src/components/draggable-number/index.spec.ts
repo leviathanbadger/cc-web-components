@@ -133,7 +133,9 @@ describe('DraggableNumber', () => {
         expect(component.value).toBe(10);
         expect(component.editing).toBe(false);
         expect(dispatch).toHaveBeenCalled();
-        expect(dispatch.mock.calls[0][0].type).toBe('change');
+        const evt = dispatch.mock.calls[0][0] as CustomEvent<{ value: number }>;
+        expect(evt.type).toBe('change');
+        expect(evt.detail.value).toBe(10);
     });
 
     it('ignores invalid values on blur', () => {

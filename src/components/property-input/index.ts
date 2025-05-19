@@ -35,7 +35,11 @@ export class PropertyInput extends LitElement {
         if (changed.has('value') || changed.has('disabled')) {
             this._updateChildren();
             if (changed.has('value') && changed.get('value') !== undefined) {
-                this.dispatchEvent(new Event('change'));
+                this.dispatchEvent(
+                    new CustomEvent('change', {
+                        detail: { value: this.value }
+                    })
+                );
             }
         }
     }

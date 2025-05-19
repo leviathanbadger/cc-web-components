@@ -131,7 +131,12 @@ export class DraggableNumber extends LitElement {
         const raw = parseFloat(input.value);
         if (!isNaN(raw)) {
             this.value = this._applyBounds(this._parseValue(raw));
-            this.dispatchEvent(new Event('change', { bubbles: true }));
+            this.dispatchEvent(
+                new CustomEvent('change', {
+                    detail: { value: this.value },
+                    bubbles: true
+                })
+            );
         }
         this._setEditing(false);
     };
@@ -179,7 +184,12 @@ export class DraggableNumber extends LitElement {
         if (!hasLock) {
             this._prevX = e.clientX;
         }
-        this.dispatchEvent(new Event('change', { bubbles: true }));
+        this.dispatchEvent(
+            new CustomEvent('change', {
+                detail: { value: this.value },
+                bubbles: true
+            })
+        );
     };
 
     private _formatValue(): string | number {
@@ -270,13 +280,23 @@ export class DraggableNumber extends LitElement {
         else if (e.key === 'ArrowUp' || e.key === 'ArrowRight') {
             const increment = this.step ?? (this.type === 'percent' ? 0.01 : 1);
             this.value = this._applyBounds(this.value + increment);
-            this.dispatchEvent(new Event('change', { bubbles: true }));
+            this.dispatchEvent(
+                new CustomEvent('change', {
+                    detail: { value: this.value },
+                    bubbles: true
+                })
+            );
             e.preventDefault();
         }
         else if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') {
             const increment = this.step ?? (this.type === 'percent' ? 0.01 : 1);
             this.value = this._applyBounds(this.value - increment);
-            this.dispatchEvent(new Event('change', { bubbles: true }));
+            this.dispatchEvent(
+                new CustomEvent('change', {
+                    detail: { value: this.value },
+                    bubbles: true
+                })
+            );
             e.preventDefault();
         }
     };

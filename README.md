@@ -89,6 +89,11 @@ The overlay input used when editing is absolutely positioned, so place
 `cc-draggable-number` inside a relatively positioned container to keep the
 overlay aligned.
 
+### Events
+
+All inputs dispatch a `change` event when their value updates. The event is a
+`CustomEvent` whose `detail.value` property holds the new value.
+
 ## Rotation Property Input
 
 `<cc-rotation-property-input>` displays an angle as full rotations and partial degrees.

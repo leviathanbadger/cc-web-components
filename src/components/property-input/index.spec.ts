@@ -24,10 +24,16 @@ describe('property-input', () => {
         expect(second.value).toBe(5);
 
         let changeCount = 0;
-        container.addEventListener('change', () => changeCount++);
+        let lastValue: number | undefined;
+        container.addEventListener('change', (e: Event) => {
+            changeCount++;
+            lastValue = (e as CustomEvent<{ value: number }>).detail.value;
+        });
 
         first.value = 12;
-        first.dispatchEvent(new Event('change', { bubbles: true }));
+        first.dispatchEvent(
+            new CustomEvent('change', { bubbles: true, detail: { value: 12 } })
+        );
         await container.updateComplete;
         await first.updateComplete;
         await second.updateComplete;
@@ -35,6 +41,7 @@ describe('property-input', () => {
         expect(container.value).toBe(12);
         expect(second.value).toBe(12);
         expect(changeCount).toBe(1);
+        expect(lastValue).toBe(12);
     });
 
     it('manages listeners for dynamically added and removed draggable numbers', async () => {
@@ -57,11 +64,17 @@ describe('property-input', () => {
         expect(second.value).toBe(3);
 
         let changeCount = 0;
-        const onChange = () => changeCount++;
+        let lastValue: number | undefined;
+        const onChange = (e: Event) => {
+            changeCount++;
+            lastValue = (e as CustomEvent<{ value: number }>).detail.value;
+        };
         container.addEventListener('change', onChange);
 
         second.value = 7;
-        second.dispatchEvent(new Event('change', { bubbles: true }));
+        second.dispatchEvent(
+            new CustomEvent('change', { bubbles: true, detail: { value: 7 } })
+        );
         await container.updateComplete;
         await first.updateComplete;
         await second.updateComplete;
@@ -69,13 +82,16 @@ describe('property-input', () => {
         expect(container.value).toBe(7);
         expect(first.value).toBe(7);
         expect(changeCount).toBe(1);
+        expect(lastValue).toBe(7);
 
         container.removeEventListener('change', onChange);
         second.remove();
         await Promise.resolve();
 
         second.value = 12;
-        second.dispatchEvent(new Event('change', { bubbles: true }));
+        second.dispatchEvent(
+            new CustomEvent('change', { bubbles: true, detail: { value: 12 } })
+        );
         await container.updateComplete;
         expect(container.value).toBe(7);
     });
@@ -92,7 +108,11 @@ describe('property-input', () => {
         const child = container.querySelector('cc-draggable-number') as HTMLElement & { value: number; updateComplete: Promise<unknown> };
 
         let changeCount = 0;
-        container.addEventListener('change', () => changeCount++);
+        let lastValue: number | undefined;
+        container.addEventListener('change', (e: Event) => {
+            changeCount++;
+            lastValue = (e as CustomEvent<{ value: number }>).detail.value;
+        });
 
         container.value = 2;
         await container.updateComplete;
@@ -100,6 +120,7 @@ describe('property-input', () => {
 
         expect(changeCount).toBe(1);
         expect(child.value).toBe(2);
+        expect(lastValue).toBe(2);
     });
 
     it('forwards disabled state to children', async () => {
