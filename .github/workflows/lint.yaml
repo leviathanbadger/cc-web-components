@@ -13,10 +13,5 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 22
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          profile: minimal
-          components: rustfmt, clippy
       - run: npm install
       - run: npm run lint
