@@ -65,6 +65,29 @@ npm run build
 Run `npm run test` to execute the test suite.
 Linting is performed using ESLint. Run `npm run lint` to check formatting and common issues.
 
+## Usage
+
+The package exposes two entrypoints:
+
+- `@leviathanbadger/cc-web-components` – side‑effect free. Import the components and call their `define*` methods yourself.
+
+  ```ts
+  import { DraggableNumber, defineDraggableNumber } from '@leviathanbadger/cc-web-components';
+
+  defineDraggableNumber();
+  const num = document.createElement('cc-draggable-number');
+  document.body.append(num);
+  ```
+
+- `@leviathanbadger/cc-web-components/define` – registers all components automatically as a side effect and only exports the component classes.
+
+  ```ts
+  import { DraggableNumber } from '@leviathanbadger/cc-web-components/define';
+
+  const num = document.createElement('cc-draggable-number');
+  document.body.append(num);
+  ```
+
 ## Draggable Number
 
 `<cc-draggable-number>` is an input that allows changing numerical values by

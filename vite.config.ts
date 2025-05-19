@@ -4,10 +4,16 @@ import { resolve } from 'path';
 export default defineConfig({
     build: {
         lib: {
-            entry: resolve(__dirname, 'src/index.ts'),
+            entry: {
+                index: resolve(__dirname, 'src/index.ts'),
+                define: resolve(__dirname, 'src/define.ts')
+            },
             name: 'CCWebComponents',
             formats: ['es', 'umd'],
-            fileName: (format) => `cc-web-components.${format}.js`
+            fileName: (format, entryName) =>
+                entryName === 'index'
+                    ? `cc-web-components.${format}.js`
+                    : `cc-web-components.${entryName}.${format}.js`
         },
         rollupOptions: {
             external: [],
