@@ -1,7 +1,7 @@
 import { css, unsafeCSS } from 'lit';
 import componentStyles from './style.css?inline';
 import { template } from './template';
-import { BaseNumericPropertyInput } from '../base-numeric-property-input';
+import { BaseNumericPropertyInput, defineBaseNumericPropertyInput } from '../base-numeric-property-input';
 import { registerElement } from '../../register';
 
 export class RotationPropertyInput extends BaseNumericPropertyInput {
@@ -19,5 +19,6 @@ export class RotationPropertyInput extends BaseNumericPropertyInput {
 }
 
 export function defineRotationPropertyInput() {
+    defineBaseNumericPropertyInput();
     registerElement('cc-rotation-property-input', RotationPropertyInput);
 }

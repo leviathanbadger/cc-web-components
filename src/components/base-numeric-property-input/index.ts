@@ -39,5 +39,7 @@ export class BaseNumericPropertyInput extends LitElement {
 }
 
 export function defineBaseNumericPropertyInput() {
+    definePropertyInput();
+    defineDraggableNumber();
     registerElement('cc-base-numeric-property-input', BaseNumericPropertyInput);
 }
