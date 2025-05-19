@@ -71,22 +71,22 @@ The package exposes two entrypoints:
 
 - `@leviathanbadger/cc-web-components` – side‑effect free. Import the components and call their `define*` methods yourself.
 
-  ```ts
-  import { DraggableNumber, defineDraggableNumber } from '@leviathanbadger/cc-web-components';
+```ts
+import { definePercentPropertyInput } from '@leviathanbadger/cc-web-components';
 
-  defineDraggableNumber();
-  const num = document.createElement('cc-draggable-number');
-  document.body.append(num);
-  ```
+definePercentPropertyInput();
+const percent = document.createElement('cc-percent-property-input');
+document.body.append(percent);
+```
 
 - `@leviathanbadger/cc-web-components/define` – registers all components automatically as a side effect and only exports the component classes.
 
-  ```ts
-  import { DraggableNumber } from '@leviathanbadger/cc-web-components/define';
+```ts
+import { PercentPropertyInput } from '@leviathanbadger/cc-web-components/define';
 
-  const num = document.createElement('cc-draggable-number');
-  document.body.append(num);
-  ```
+const percent = document.createElement('cc-percent-property-input');
+document.body.append(percent);
+```
 
 ## Draggable Number
 
