@@ -197,6 +197,15 @@ describe('DraggableNumber', () => {
         expect(component.value).toBeCloseTo(0.01);
     });
 
+    it('applies dragFactor to drag change', () => {
+        const component = new DraggableNumber();
+        component.dragFactor = 0.5;
+        const target = { setPointerCapture: vi.fn() } as unknown as HTMLElement;
+        component['_onPointerDown']({ target, clientX: 0, pointerId: 1 } as unknown as PointerEvent);
+        component['_onPointerMove']({ clientX: 2 } as unknown as PointerEvent);
+        expect(component.value).toBe(1);
+    });
+
     it('formats and parses percent type', () => {
         const component = new DraggableNumber();
         component.type = 'percent';

@@ -38,7 +38,8 @@ export class DraggableNumber extends LitElement {
         min: { type: Number, reflect: true },
         max: { type: Number, reflect: true },
         step: { type: Number, reflect: true },
-        disabled: { type: Boolean, reflect: true }
+        disabled: { type: Boolean, reflect: true },
+        dragFactor: { type: Number, reflect: true }
     } as const;
 
     private _dragging = false;
@@ -51,6 +52,7 @@ export class DraggableNumber extends LitElement {
     declare max: number | null;
     declare step: number;
     declare disabled: boolean;
+    declare dragFactor: number;
 
     constructor() {
         super();
@@ -68,6 +70,9 @@ export class DraggableNumber extends LitElement {
         }
         if (!this.hasAttribute('disabled')) {
             this.disabled = false;
+        }
+        if (!this.hasAttribute('dragFactor')) {
+            this.dragFactor = 1;
         }
     }
 
@@ -173,7 +178,7 @@ export class DraggableNumber extends LitElement {
         }
 
         if (delta !== 0) this._moved = true;
-        let change = process_drag(delta);
+        let change = process_drag(delta) * this.dragFactor;
         if (this.type === 'whole-rotation') {
             change *= 360;
         }
