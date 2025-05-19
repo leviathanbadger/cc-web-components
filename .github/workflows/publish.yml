@@ -18,6 +18,31 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - run: npm ci
       - run: npm run build
-      - run: npm publish
+      - name: Set package version
+        id: version
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            VERSION="${GITHUB_REF#refs/tags/v}"
+            npm version "$VERSION" --no-git-tag-version
+            CURRENT=$(npm view @leviathanbadger/cc-web-components dist-tags.latest || echo "0.0.0")
+            node - <<'EOF'
+const semver = require('semver');
+process.exit(semver.gt(process.env.VERSION, process.env.CURRENT) ? 0 : 1);
+EOF
+            if [[ $? -eq 0 ]]; then
+              NPM_TAG="latest"
+            else
+              NPM_TAG="old"
+            fi
+          else
+            BASE_VERSION="$(node -p "require('./package.json').version")"
+            VERSION="${BASE_VERSION}-build.${GITHUB_RUN_NUMBER}"
+            npm version "$VERSION" --no-git-tag-version
+            NPM_TAG="build"
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=$NPM_TAG" >> "$GITHUB_OUTPUT"
+      - name: Publish
+        run: npm publish --tag ${{ steps.version.outputs.tag }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
