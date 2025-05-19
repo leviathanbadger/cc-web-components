@@ -3,11 +3,12 @@ import { resolve } from 'path';
 
 export default defineConfig({
     build: {
+        emptyOutDir: false,
         lib: {
-            entry: resolve(__dirname, 'src/index.ts'),
+            entry: resolve(__dirname, 'src/define.ts'),
             name: 'CCWebComponents',
-            formats: ['es', 'umd'],
-            fileName: format => `cc-web-components.${format}.js`
+            formats: ['es'],
+            fileName: format => `cc-web-components.define.${format}.js`
         },
         rollupOptions: {
             external: [],
