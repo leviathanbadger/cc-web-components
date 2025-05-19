@@ -18,3 +18,9 @@ package-lock.json
 # Node modules (shouldn't be published)
 node_modules/
 
+# Documentation and configuration not needed in the package
+docs/
+.github/
+PROJECT-PLAN.md
+DOCUMENTATION.md
+
