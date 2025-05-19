@@ -26,7 +26,9 @@ export class BaseNumericPropertyInput extends LitElement {
     protected _onNumberChange = (e: Event) => {
         const val = (e.target as DraggableNumberElement).value;
         this.value = val;
-        this.dispatchEvent(new Event('change'));
+        this.dispatchEvent(
+            new CustomEvent('change', { detail: { value: this.value } })
+        );
     };
 
     connectedCallback() {
