@@ -2,6 +2,8 @@ name: Publish
 
 on:
   push:
+    branches:
+      - master
     tags:
       - 'v*'
 
@@ -14,13 +16,7 @@ jobs:
         with:
           node-version: 22
           registry-url: 'https://registry.npmjs.org'
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          target: wasm32-unknown-unknown
-          profile: minimal
       - run: npm ci
-      - run: npm run build:wasm
       - run: npm run build
       - run: npm publish
         env:
