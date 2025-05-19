@@ -8,7 +8,9 @@
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
         "outDir": "dist/types",
-        "types": ["vitest", "jsdom"]
+        "types": ["vitest", "jsdom"],
+        "experimentalDecorators": true,
+        "useDefineForClassFields": false
     },
     "include": ["src/**/*"],
     "exclude": ["node_modules", "dist"]

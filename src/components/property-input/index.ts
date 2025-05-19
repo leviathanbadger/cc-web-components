@@ -1,4 +1,5 @@
 import { LitElement, css, unsafeCSS } from 'lit';
+import { property } from 'lit/decorators.js';
 import componentStyles from './style.css?inline';
 import { template } from './template';
 import { registerElement } from '../../register';
@@ -8,23 +9,11 @@ type DraggableNumberElement = HTMLElement & { value: number };
 export class PropertyInput extends LitElement {
     static styles = css`${unsafeCSS(componentStyles)}`;
 
-    static properties = {
-        value: { type: Number, reflect: true },
-        disabled: { type: Boolean, reflect: true }
-    };
+    @property({ type: Number, reflect: true })
+    value = 0;
 
-    declare value: number;
-    declare disabled: boolean;
-
-    constructor() {
-        super();
-        if (!this.hasAttribute('value')) {
-            this.value = 0;
-        }
-        if (!this.hasAttribute('disabled')) {
-            this.disabled = false;
-        }
-    }
+    @property({ type: Boolean, reflect: true })
+    disabled = false;
 
     private _listeners = new Map<DraggableNumberElement, EventListener>();
 
