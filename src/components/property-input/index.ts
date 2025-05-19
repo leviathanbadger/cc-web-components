@@ -3,6 +3,7 @@ import { property } from 'lit/decorators.js';
 import componentStyles from './style.css?inline';
 import { template } from './template';
 import { registerElement } from '../../register';
+import { defineDraggableNumber } from '../draggable-number';
 
 type DraggableNumberElement = HTMLElement & { value: number };
 
@@ -72,5 +73,6 @@ export class PropertyInput extends LitElement {
 }
 
 export function definePropertyInput() {
+    defineDraggableNumber();
     registerElement('cc-property-input', PropertyInput);
 }
