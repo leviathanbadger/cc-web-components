@@ -22,6 +22,10 @@ Session.vim
 ## Build
 /build
 /dist/
+custom-elements.json
+docs/api/
+docs/build/
+storybook-static/
 
 ## Temporary files
 *~
