@@ -304,6 +304,16 @@ describe('draggable-number DOM', () => {
         const span = comp.shadowRoot.querySelector('span');
         expect(span?.getAttribute('tabindex')).toBe('0');
     });
+    it('exposes spinbutton aria attributes', async () => {
+        document.body.innerHTML = '<cc-draggable-number value="3" min="1" max="5"></cc-draggable-number>';
+        const comp = document.querySelector('cc-draggable-number') as HTMLElement & { shadowRoot: ShadowRoot; updateComplete: Promise<unknown> };
+        await comp.updateComplete;
+        const span = comp.shadowRoot.querySelector('span') as HTMLElement;
+        expect(span.getAttribute('role')).toBe('spinbutton');
+        expect(span.getAttribute('aria-valuenow')).toBe('3');
+        expect(span.getAttribute('aria-valuemin')).toBe('1');
+        expect(span.getAttribute('aria-valuemax')).toBe('5');
+    });
     it('shows input after click', async () => {
         document.body.innerHTML = '<cc-draggable-number></cc-draggable-number>';
         const comp = document.querySelector('cc-draggable-number') as HTMLElement & { shadowRoot: ShadowRoot; updateComplete: Promise<unknown> };

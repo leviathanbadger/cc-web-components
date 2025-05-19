@@ -120,6 +120,7 @@ export class DraggableNumber extends LitElement {
     render() {
         return template(
             this._formatValue(),
+            this.value,
             this.editing,
             this._onBlur.bind(this),
             this._onKeyDown.bind(this),
