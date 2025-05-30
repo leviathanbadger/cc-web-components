@@ -3,6 +3,10 @@
 Experimenting with Codex to create web components that mimic some of the controls found in Adobe
 CC products. The components are implemented entirely in TypeScript.
 
+**Disclaimer**
+This project is unaffiliated with Adobe Inc. "Adobe" and "Creative Cloud" are trademarks of Adobe Inc.
+Any screenshots or user interface references in this repository are used solely for illustrative purposes.
+
 One of the things I love about the Adobe Creative Cloud software is that there are new, very novel user
 components that make it easy and intuitive to work with data and information that otherwise don't have a
 standardized way to interact.
