@@ -20,6 +20,8 @@ jobs:
           restore-keys: node-deps-
       - name: Install NPM dependencies
         run: npm ci
+      - name: Audit NPM dependencies
+        run: npm audit --audit-level=high
       - name: Run Tests (Vitest)
         run: npm run test -- --coverage
       - name: Build Library (Vite)
