@@ -53,7 +53,7 @@ describe('DraggableNumber', () => {
         component.updated(new Map([['disabled', false]]));
 
         expect(exitLock).toHaveBeenCalled();
-        expect((component as unknown as { _dragging: boolean })._dragging).toBe(false);
+        expect(component.isDragging).toBe(false);
 
         globalWithDoc.document = originalDocument;
     });
@@ -158,7 +158,7 @@ describe('DraggableNumber', () => {
         const dispatch = vi.spyOn(component, 'dispatchEvent');
         component['_onPointerMove']({ clientX: 10 } as unknown as PointerEvent);
         expect(component.value).toBe(10);
-        expect(component['_moved']).toBe(true);
+        expect(component.hasMoved).toBe(true);
         expect(dispatch).toHaveBeenCalled();
     });
 
@@ -178,7 +178,7 @@ describe('DraggableNumber', () => {
         const target = { setPointerCapture: vi.fn() } as unknown as HTMLElement;
         component['_onPointerDown']({ target, clientX: 100, pointerId: 1 } as unknown as PointerEvent);
         component['_onPointerMove']({ clientX: 110 } as PointerEvent);
-        expect((component as unknown as { _prevX: number })._prevX).toBe(110);
+        expect(component.prevX).toBe(110);
     });
 
     it('scales drag change for whole rotations', () => {
@@ -255,7 +255,7 @@ describe('DraggableNumber', () => {
         const dispatch = vi.spyOn(component, 'dispatchEvent');
         component['_onPointerMove']({ movementX: 5 } as unknown as PointerEvent);
         expect(component.value).toBe(5);
-        expect(component['_moved']).toBe(true);
+        expect(component.hasMoved).toBe(true);
         expect(dispatch).toHaveBeenCalled();
         globalWithDoc.document = originalDoc;
     });

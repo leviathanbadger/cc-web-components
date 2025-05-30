@@ -52,22 +52,34 @@ export class DraggableNumber extends LitElement {
     @property({ type: Number, attribute: 'drag-factor', reflect: true })
     dragFactor = 1;
 
-    private _dragging = false;
-    private _moved = false;
-    private _prevX = 0;
-    private _dragRemainder = 0;
+    #dragging = false;
+    #moved = false;
+    #prevX = 0;
+    #dragRemainder = 0;
 
 
-    private _editing = false;
-    private _focusDisplayNext = false;
+    #editing = false;
+    #focusDisplayNext = false;
 
     get editing() {
-        return this._editing;
+        return this.#editing;
+    }
+
+    get isDragging() {
+        return this.#dragging;
+    }
+
+    get hasMoved() {
+        return this.#moved;
+    }
+
+    get prevX() {
+        return this.#prevX;
     }
 
     private _setEditing(val: boolean) {
-        const old = this._editing;
-        this._editing = val;
+        const old = this.#editing;
+        this.#editing = val;
         this.requestUpdate('editing', old);
     }
 
@@ -83,10 +95,10 @@ export class DraggableNumber extends LitElement {
                     }
                 }
             }
-            else if (this._focusDisplayNext) {
+            else if (this.#focusDisplayNext) {
                 const span = this.shadowRoot?.querySelector('span');
                 span?.focus();
-                this._focusDisplayNext = false;
+                this.#focusDisplayNext = false;
             }
         }
         if (changed.has('disabled') && this.disabled) {
@@ -100,7 +112,7 @@ export class DraggableNumber extends LitElement {
             ) {
                 (document as Document & { exitPointerLock?: () => void }).exitPointerLock();
             }
-            this._dragging = false;
+            this.#dragging = false;
         }
     }
 
@@ -144,10 +156,10 @@ export class DraggableNumber extends LitElement {
     private _onPointerDown = (e: PointerEvent) => {
         if (this.disabled) return;
         const target = e.target as HTMLElement;
-        this._dragging = true;
-        this._moved = false;
-        this._dragRemainder = 0;
-        this._prevX = e.clientX;
+        this.#dragging = true;
+        this.#moved = false;
+        this.#dragRemainder = 0;
+        this.#prevX = e.clientX;
         target.setPointerCapture(e.pointerId);
         if (target.requestPointerLock) {
             target.requestPointerLock();
@@ -155,7 +167,7 @@ export class DraggableNumber extends LitElement {
     };
 
     private _onPointerMove = (e: PointerEvent) => {
-        if (!this._dragging || this.disabled) return;
+        if (!this.#dragging || this.disabled) return;
         let delta: number;
         const hasLock =
             typeof document !== 'undefined' && document.pointerLockElement;
@@ -163,10 +175,10 @@ export class DraggableNumber extends LitElement {
             delta = e.movementX;
         }
         else {
-            delta = e.clientX - this._prevX;
+            delta = e.clientX - this.#prevX;
         }
 
-        if (delta !== 0) this._moved = true;
+        if (delta !== 0) this.#moved = true;
         let change = delta;
         if (this.type === 'whole-rotation') {
             change *= 360;
@@ -177,12 +189,12 @@ export class DraggableNumber extends LitElement {
 
         change *= this.dragFactor ?? 1;
 
-        const raw = this.value + this._dragRemainder + change;
+        const raw = this.value + this.#dragRemainder + change;
         const bounded = this._applyBounds(raw);
-        this._dragRemainder = raw - bounded;
+        this.#dragRemainder = raw - bounded;
         this.value = bounded;
         if (!hasLock) {
-            this._prevX = e.clientX;
+            this.#prevX = e.clientX;
         }
         this.dispatchEvent(
             new CustomEvent('change', {
@@ -240,8 +252,8 @@ export class DraggableNumber extends LitElement {
     private _stopDrag = (e: PointerEvent) => {
         if (this.disabled) return;
         const target = e.target as HTMLElement;
-        this._dragging = false;
-        this._dragRemainder = 0;
+        this.#dragging = false;
+        this.#dragRemainder = 0;
         target.releasePointerCapture(e.pointerId);
         if (typeof document !== 'undefined' && document.exitPointerLock) {
             document.exitPointerLock();
@@ -250,10 +262,10 @@ export class DraggableNumber extends LitElement {
 
     private _onClick = () => {
         if (this.disabled) return;
-        if (!this._moved) {
+        if (!this.#moved) {
             this._setEditing(true);
         }
-        this._moved = false;
+        this.#moved = false;
     };
 
     private _onKeyDown = (e: KeyboardEvent) => {
@@ -261,12 +273,12 @@ export class DraggableNumber extends LitElement {
         if (this.editing) {
             if (e.key === 'Enter') {
                 const input = e.target as HTMLInputElement;
-                this._focusDisplayNext = true;
+                this.#focusDisplayNext = true;
                 this._onBlur({ target: input } as unknown as Event);
                 e.preventDefault();
             }
             else if (e.key === 'Escape') {
-                this._focusDisplayNext = true;
+                this.#focusDisplayNext = true;
                 this._setEditing(false);
                 e.preventDefault();
             }
