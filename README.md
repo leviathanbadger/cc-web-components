@@ -148,3 +148,7 @@ The example above renders the value as `35%`.
 ## Project Plan
 
 For the full development plan and design details, see [PROJECT-PLAN.md](./PROJECT-PLAN.md).
+
+## License
+
+This project is released under the [MIT License](./LICENSE).
