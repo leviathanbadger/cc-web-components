@@ -33,7 +33,7 @@
         "@docusaurus/plugin-content-pages": "^3.8.0",
         "@docusaurus/preset-classic": "^3.8.0",
         "@docusaurus/theme-live-codeblock": "^3.8.0",
-        "@storybook/addon-docs": "^9.0.0",
+        "@storybook/addon-docs": "^9.0.4",
         "@storybook/web-components": "^9.0.1",
         "@types/jsdom": "^21.1.7",
         "@typescript-eslint/eslint-plugin": "^8.32.1",
