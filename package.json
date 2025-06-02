@@ -40,7 +40,7 @@
         "@typescript-eslint/parser": "^8.33.0",
         "@vitest/coverage-v8": "^3.1.4",
         "docusaurus-plugin-typedoc": "^1.4.0",
-        "eslint": "^9.27.0",
+        "eslint": "^9.28.0",
         "jsdom": "^26.1.0",
         "prettier": "^3.5.3",
         "storybook": "^9.0.0",
